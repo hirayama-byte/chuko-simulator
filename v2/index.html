@@ -862,18 +862,6 @@
         </div>
       </div>
 
-      <div class="field">
-        <div class="field-label-row">
-          <label for="normalNew">月の通常新規獲得数</label>
-          <span class="hint">広告なしで通常獲得できる人数（参考値）</span>
-        </div>
-        <input type="range" id="normalNewRange" min="0" max="1000" step="1" value="30" aria-hidden="true" tabindex="-1" />
-        <div class="field-input-row">
-          <input type="number" id="normalNew" value="30" min="0" step="1" inputmode="numeric" />
-          <span class="field-suffix" id="normalNewUnit">人 / 月</span>
-        </div>
-        <p class="note-line" id="adNewNote"></p>
-      </div>
 
       <div class="field">
         <div class="field-label-row">
@@ -992,7 +980,7 @@
     <p>おすすめのサイズ・頻度はジャンルごとに初期値として入れてあります（例：<strong>注文住宅・不動産は本文1P × 年12回</strong>、<strong>リフォーム・医療・車・冠婚葬祭・BtoBは本文1/2P</strong>、<strong>飲食・美容・ショップなどは本文1/4P</strong>）。発行部数・サイズ・頻度を変えると、価格表の単価が自動で入れ替わります。選べるサイズは本文2P／1P／1/2P／1/4P／1/6枠／1/8枠と、表4・表2・表3・表2・3対向の計9種類です。フリー広告の制作費（1P 30,000円／1/2P 20,000円／1/4P 15,000円／1/4P未満 10,000円・初回のみ、原稿をデータ支給いただける場合は不要）はシミュレーションには含めていません。</p>
     <p>STEP3の<strong>「必要な販促費」は、チラシ・Web・SNS・ポータルサイトなど情報誌以外も含めた、すべての販促手段を合わせた全販促費</strong>の目安です。STEP5の費用対効果シミュレーションは、そのうち<strong>情報誌に出稿した場合</strong>の売上・損益を計算しています。両者は範囲が違うため、STEP3では「必要販促費のうち情報誌が占める割合」を並べて表示しています。</p>
     <p>広告経由の来店者数は、<strong>「広告を掲載した月に加わる新規集客数」＋「来店頻度のタイミングで発生するリピート来店数（新規集客数×リピート率）」</strong>として計算しています。リピート来店は広告を実施した回数を基準に発生し、2回目以降の掲載タイミングのうち「来店頻度」で選んだ間隔ごとにだけ計上されます（広告を打っていない月には発生しません）。</p>
-    <p>売上・損益は、あくまで<strong>広告によって上乗せされた分</strong>のみを計算しています。「月の通常新規獲得数」は比較の目安としての参考値で、試算そのものには影響しません。</p>
+    <p>売上・損益は、あくまで<strong>広告によって上乗せされた分</strong>のみを計算しています。</p>
     <p>CPAも反響も、季節・競合・原稿内容・立地など様々な要因で変動します。この試算は打ち合わせ時の目安としてご活用ください。</p>
     <ul class="source-list">
       <li>反響率の参考：<a href="https://www.meiko-kikaku.co.jp/blog/news/15387/" target="_blank" rel="noopener">チラシの反響率の目安はどれくらい？業種別の相場と上げ方【2026年版】（明光企画）</a></li>
@@ -1034,8 +1022,6 @@
     compareBox: document.getElementById("compareBox"),
     unitPrice: document.getElementById("unitPrice"),
     unitPriceRange: document.getElementById("unitPriceRange"),
-    normalNew: document.getElementById("normalNew"),
-    normalNewRange: document.getElementById("normalNewRange"),
     repeatRate: document.getElementById("repeatRate"),
     repeatRateRange: document.getElementById("repeatRateRange"),
     repeatFreq: document.getElementById("repeatFreq"),
@@ -1044,11 +1030,9 @@
     adArea: document.getElementById("adArea"),
     adSize: document.getElementById("adSize"),
     adNewUnit: document.getElementById("adNewUnit"),
-    normalNewUnit: document.getElementById("normalNewUnit"),
     adFreq: document.getElementById("adFreq"),
     adCost: document.getElementById("adCost"),
     adCostRange: document.getElementById("adCostRange"),
-    adNewNote: document.getElementById("adNewNote"),
     adCostNote: document.getElementById("adCostNote"),
     valBreakeven: document.getElementById("valBreakeven"),
     valYearSpend: document.getElementById("valYearSpend"),
@@ -1071,79 +1055,79 @@
       key: "gourmet", unit: "人", label: "グルメ（飲食店・カフェ）",
       low: 1000, mid: 2000, high: 3000,
       basis: "地方都市の実勢CPAは1,000〜3,000円、月間販促費の相場は5〜15万円。目標45人×2,000円＝月9万円で相場内",
-      preset: { unitPrice: 3500, normalNew: 30, repeatRate: 30, revisitInterval: 1, adNew: 45, adArea: "45,000部以上", size: "p1_4", freq: 1 }
+      preset: { unitPrice: 3500, repeatRate: 30, revisitInterval: 1, adNew: 45, adArea: "45,000部以上", size: "p1_4", freq: 1 }
     },
     {
       key: "beauty", unit: "人", label: "ビューティー（美容室・ネイル・リラク）",
       low: 3000, mid: 4500, high: 6000,
       basis: "地方都市の実勢CPAは3,000〜6,000円、月間販促費の相場は10〜20万円。ホットペッパービューティーは最下位プランでも月2.5万円〜なので、この水準が実態",
-      preset: { unitPrice: 6000, normalNew: 20, repeatRate: 50, revisitInterval: 2, adNew: 30, adArea: "45,000部以上", size: "p1_4", freq: 1 }
+      preset: { unitPrice: 6000, repeatRate: 50, revisitInterval: 2, adNew: 30, adArea: "45,000部以上", size: "p1_4", freq: 1 }
     },
     {
       key: "esthe", unit: "件", label: "エステ・脱毛・痩身",
       low: 4000, mid: 8000, high: 12000,
       basis: "地方都市の実勢CPAは4,000〜12,000円、月間販促費の相場は10〜25万円。コース契約前提でLTVから逆算できるため、来店型より高いCPAが許容される",
-      preset: { unitPrice: 30000, normalNew: 10, repeatRate: 60, revisitInterval: 1, adNew: 15, adArea: "45,000部以上", size: "p1_4", freq: 1, priceRange: { min: 0, max: 200000, step: 5000 } }
+      preset: { unitPrice: 30000, repeatRate: 60, revisitInterval: 1, adNew: 15, adArea: "45,000部以上", size: "p1_4", freq: 1, priceRange: { min: 0, max: 200000, step: 5000 } }
     },
     {
       key: "school", unit: "人", label: "スクール（教室・習い事・塾）",
       low: 8000, mid: 14000, high: 20000,
       basis: "地方都市の実勢CPAは8,000〜20,000円、月間販促費の相場は10〜20万円。客単価は入会金＋教材費＋初月月謝の初回売上で見ている",
-      preset: { unitPrice: 45000, normalNew: 7, repeatRate: 85, revisitInterval: 1, adNew: 10, adArea: "45,000部以上", size: "p1_4", freq: 1 }
+      preset: { unitPrice: 45000, repeatRate: 85, revisitInterval: 1, adNew: 10, adArea: "45,000部以上", size: "p1_4", freq: 1 }
     },
     {
       key: "clinic", unit: "人", label: "医療・クリニック（歯科・整体・接骨院）",
       low: 5000, mid: 8000, high: 12000,
       basis: "地方都市の実勢CPAは5,000〜12,000円、月間販促費の相場は15〜30万円。客単価は初診＋検査＋処置の初回売上（自由診療を含む平均）で見ている",
-      preset: { unitPrice: 12000, normalNew: 18, repeatRate: 50, revisitInterval: 1, adNew: 25, adArea: "45,000部以上", size: "p1_2", freq: 1 }
+      preset: { unitPrice: 12000, repeatRate: 50, revisitInterval: 1, adNew: 25, adArea: "45,000部以上", size: "p1_2", freq: 1 }
     },
     {
       key: "shop", unit: "人", label: "ショップ（物販店）",
       low: 2000, mid: 3500, high: 5000,
       basis: "地方都市の実勢CPAは2,000〜5,000円、月間販促費の相場は5〜15万円。客単価は初回購入額（雑貨からアパレルまでの中間）で見ている",
-      preset: { unitPrice: 6000, normalNew: 25, repeatRate: 30, revisitInterval: 3, adNew: 35, adArea: "45,000部以上", size: "p1_4", freq: 1 }
+      preset: { unitPrice: 6000, repeatRate: 30, revisitInterval: 3, adNew: 35, adArea: "45,000部以上", size: "p1_4", freq: 1 }
     },
     {
       key: "chumon", unit: "棟", label: "注文住宅（新築・工務店・ハウスメーカー）",
       low: 50000, mid: 100000, high: 150000,
       basis: "地方都市の実勢CPA（契約1棟あたり）は50,000〜150,000円、月間販促費の相場は30〜100万円。契約金額3,000万円に対して0.3%で、業界目安「契約金額の3%」に対してかなり堅めの設定",
-      preset: { unitPrice: 30000000, normalNew: 2, repeatRate: 1, revisitInterval: 12, adNew: 3, adArea: "45,000部以上", size: "p1", freq: 1, priceRange: { min: 0, max: 100000000, step: 1000000 } }
+      preset: { unitPrice: 30000000, repeatRate: 1, revisitInterval: 12, adNew: 3, adArea: "45,000部以上", size: "p1", freq: 1, priceRange: { min: 0, max: 100000000, step: 1000000 } }
     },
     {
       key: "reform", unit: "件", label: "リフォーム（改装・水回り・外壁）",
       low: 30000, mid: 50000, high: 80000,
       basis: "地方都市の実勢CPA（問合せ・反響1件あたり）は30,000〜80,000円、月間販促費の相場は20〜50万円。リピートは少ないが1件あたりの粗利が大きいため、この水準でも利益が残る",
-      preset: { unitPrice: 1000000, normalNew: 3, repeatRate: 5, revisitInterval: 12, adNew: 4, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 5000000, step: 100000 } }
+      preset: { unitPrice: 1000000, repeatRate: 5, revisitInterval: 12, adNew: 4, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 5000000, step: 100000 } }
     },
     {
       key: "realestate", unit: "件", label: "不動産（賃貸・売買仲介）",
       low: 30000, mid: 50000, high: 80000,
       basis: "地方都市の実勢CPAは30,000〜80,000円、月間販促費の相場は20〜60万円。資料請求や内見の段階で数万円のCPAを設定しても、仲介手数料で回収できる",
-      preset: { unitPrice: 300000, normalNew: 5, repeatRate: 5, revisitInterval: 12, adNew: 8, adArea: "45,000部以上", size: "p1", freq: 1, priceRange: { min: 0, max: 2000000, step: 50000 } }
+      preset: { unitPrice: 300000, repeatRate: 5, revisitInterval: 12, adNew: 8, adArea: "45,000部以上", size: "p1", freq: 1, priceRange: { min: 0, max: 2000000, step: 50000 } }
     },
     {
       key: "car", unit: "件", label: "車・バイク（販売・整備・車検）",
       low: 10000, mid: 17000, high: 25000,
       basis: "地方都市の実勢CPAは10,000〜25,000円、月間販促費の相場は15〜30万円。車検・整備で毎年戻ってくる前提なので、LTVから逆算して1〜2万円台のCPAが成立する",
-      preset: { unitPrice: 50000, normalNew: 8, repeatRate: 60, revisitInterval: 12, adNew: 12, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 300000, step: 5000 } }
+      preset: { unitPrice: 50000, repeatRate: 60, revisitInterval: 12, adNew: 12, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 300000, step: 5000 } }
     },
     {
       key: "leisure", unit: "人", label: "レジャー・旅行・宿泊",
       low: 3000, mid: 5000, high: 8000,
       basis: "地方都市の実勢CPAは3,000〜8,000円、月間販促費の相場は10〜25万円。日帰りレジャー・温浴施設の利用を想定",
-      preset: { unitPrice: 8000, normalNew: 25, repeatRate: 25, revisitInterval: 6, adNew: 35, adArea: "45,000部以上", size: "p1_4", freq: 1 }
+      preset: { unitPrice: 8000, repeatRate: 25, revisitInterval: 6, adNew: 35, adArea: "45,000部以上", size: "p1_4", freq: 1 }
     },
     {
       key: "ceremony", unit: "件", label: "冠婚葬祭（式場・葬儀・仏事）",
       low: 30000, mid: 50000, high: 70000,
       basis: "地方都市の実勢CPAは30,000〜70,000円、月間販促費の相場は20〜50万円。検討期間が長く、相談・見学の段階で数万円のCPAを投じても1件の粗利で回収できる",
-      preset: { unitPrice: 1500000, normalNew: 4, repeatRate: 1, revisitInterval: 12, adNew: 6, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 3000000, step: 100000 } }
+      preset: { unitPrice: 1500000, repeatRate: 1, revisitInterval: 12, adNew: 6, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 3000000, step: 100000 } }
     },
     {
       key: "btob", unit: "件", label: "BtoB・士業・各種サービス",
       low: 20000, mid: 35000, high: 50000,
       basis: "地方都市の実勢CPAは20,000〜50,000円、月間販促費の相場は15〜40万円。問合せ1件あたりの単価。紙媒体では反響が出にくい業種",
-      preset: { unitPrice: 200000, normalNew: 5, repeatRate: 20, revisitInterval: 12, adNew: 8, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 1000000, step: 20000 } }
+      preset: { unitPrice: 200000, repeatRate: 20, revisitInterval: 12, adNew: 8, adArea: "45,000部以上", size: "p1_2", freq: 1, priceRange: { min: 0, max: 1000000, step: 20000 } }
     },
     {
       key: "average", unit: "人", label: "全業種の平均（業種が決まっていないとき）",
@@ -1258,7 +1242,6 @@
   function renderUnits() {
     var u = unitOf();
     els.adNewUnit.textContent = u + " / 月";
-    els.normalNewUnit.textContent = u + " / 月";
   }
 
   function findSize(key) {
@@ -1419,9 +1402,6 @@
     els.unitPriceRange.value = p.unitPrice;
     els.unitPrice.value = p.unitPrice.toLocaleString("ja-JP");
 
-    els.normalNewRange.value = p.normalNew;
-    els.normalNew.value = p.normalNew;
-
     els.repeatRateRange.value = p.repeatRate;
     els.repeatRate.value = p.repeatRate;
     els.repeatFreq.value = String(p.revisitInterval);
@@ -1481,7 +1461,6 @@
   /* ---------- 入力の紐付け ---------- */
 
   pairCommaInputs(els.unitPrice, els.unitPriceRange, snapUnitPrice);
-  pairInputs(els.normalNew, els.normalNewRange);
   pairInputs(els.repeatRate, els.repeatRateRange);
   pairInputs(els.adNew, els.adNewRange);
   pairCommaInputs(els.cpa, els.cpaRange);
@@ -1580,16 +1559,6 @@
     profitEl.innerHTML = (last.cumProfit >= 0 ? "+" : "") + man(last.cumProfit);
     profitEl.classList.toggle("is-good", last.cumProfit >= 0);
     profitEl.classList.toggle("is-bad", last.cumProfit < 0);
-  }
-
-  function renderNote(normalNew, adNew) {
-    if (normalNew <= 0) {
-      els.adNewNote.innerHTML = "通常獲得数が0" + unitOf() + "のため、比較の参考値は表示されません。";
-      return;
-    }
-    var pct = Math.round((adNew / normalNew) * 100);
-    els.adNewNote.innerHTML =
-      "通常の新規獲得数 <strong>" + normalNew + unitOf() + "</strong> に対して、広告で <strong>+" + adNew + unitOf() + "（+" + pct + "%）</strong> の上乗せを見込む試算です。";
   }
 
   function seisakuNote() {
@@ -1923,7 +1892,6 @@
 
   function render() {
     var unitPrice = num(els.unitPrice, 0);
-    var normalNew = num(els.normalNew, 0);
     var repeatRatePct = num(els.repeatRate, 0);
     var adNew = num(els.adNew, 0);
     var cpa = num(els.cpa, 0);
@@ -1945,7 +1913,6 @@
     var breakevenMonth = findBreakeven(rows12);
     var breakevenExtended = breakevenMonth ? null : findBreakeven(rowsExtended);
 
-    renderNote(normalNew, adNew);
     renderAdCostNote(adCost, freq);
     renderStats(rows12, breakevenMonth, breakevenExtended);
     renderTable(rows12, breakevenMonth);
