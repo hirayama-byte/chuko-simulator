@@ -1,0 +1,1895 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=560">
+<title>販促費シミュレーション Ver.2｜中広グループ</title>
+<style>
+  /* 中広グループ版は常時ダークテーマ（v1 と同じ方針） */
+  :root {
+    --surface-page: #12151a;
+    --surface-card: #1a1f27;
+    --surface-card-alt: #20262f;
+    --surface-input: #171c23;
+    --border: #2b323c;
+    --border-strong: #384051;
+    --ink: #edeae3;
+    --ink-muted: #9ba1ac;
+    --ink-faint: #6c7480;
+    --accent-cost: #4c93c4;
+    --accent-cost-tint: rgba(76, 147, 196, 0.16);
+    --accent-revenue: #bc842e;
+    --accent-revenue-tint: rgba(188, 132, 46, 0.18);
+    --accent-profit-pos: #33a67e;
+    --accent-profit-pos-tint: rgba(51, 166, 126, 0.18);
+    --accent-profit-neg: #c85850;
+    --accent-profit-neg-tint: rgba(200, 88, 80, 0.16);
+    --focus-ring: #4c93c4;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.6);
+    --font-display: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "HGS明朝E", "MS PMincho", serif;
+    --font-body: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--surface-page);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 28px 18px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 2px 8px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent-cost);
+    text-transform: none;
+  }
+
+  .headline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.85rem, 8vw, 2.4rem);
+    line-height: 1.38;
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: 0.01em;
+  }
+
+  .subhead {
+    color: var(--ink-muted);
+    font-size: 1.05rem;
+    margin: 0;
+    max-width: 42ch;
+  }
+
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 20px 18px 22px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 18px;
+    letter-spacing: 0.01em;
+  }
+
+  .field-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field-label-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .field label {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .field .hint {
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    font-weight: 400;
+  }
+
+  .field-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .field-input-row input[type="number"],
+  .field-input-row input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--surface-input);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: right;
+  }
+
+  .field-input-row input[type="number"]:focus-visible,
+  .field-input-row input[type="text"]:focus-visible,
+  input[type="range"]:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .field select {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    background-color: var(--surface-input);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 12px 36px 12px 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%236b6f76' d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+  }
+
+  .field select:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .field-input-row-split input[type="number"] {
+    flex: 0 0 92px;
+  }
+
+  .field-input-row-split select {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    font-size: 0.95rem;
+    padding: 12px 30px 12px 10px;
+    background-position: right 8px center;
+    background-size: 18px;
+  }
+
+  .field-input-row-dual select {
+    width: auto;
+  }
+
+  .field-input-row-dual .ad-area-select {
+    flex: 0 0 110px;
+  }
+
+  .field-input-row-dual .ad-freq-select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .field-suffix {
+    font-size: 1rem;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 34px;
+    background: transparent;
+    margin: 0;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-card-alt);
+    border: 1px solid var(--border);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    margin-top: -11px;
+    border-radius: 50%;
+    background: var(--accent-cost);
+    border: 3px solid var(--surface-card);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-card-alt);
+    border: 1px solid var(--border);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-cost);
+    border: 3px solid var(--surface-card);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+
+  .note-line {
+    margin-top: 2px;
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    background: var(--surface-card-alt);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .note-line strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .stat-tile {
+    background: var(--surface-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-tile.is-primary {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--accent-cost-tint), var(--accent-revenue-tint));
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    letter-spacing: 0.01em;
+  }
+
+  .stat-value {
+    font-family: var(--font-body);
+    font-size: clamp(1.55rem, 8.5vw, 2.05rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .stat-value .unit {
+    font-size: 0.62em;
+    font-weight: 700;
+    margin-left: 2px;
+    color: var(--ink-muted);
+  }
+
+  .stat-value.is-good { color: var(--accent-profit-pos); }
+  .stat-value.is-bad { color: var(--accent-profit-neg); }
+
+  .chart-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+
+  .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+
+  .legend-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+
+  .chart-wrap {
+    position: relative;
+  }
+
+  .chart-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+  .chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--ink);
+    color: var(--surface-page);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    padding: 10px 12px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+    transform: translate(-50%, calc(-100% - 10px));
+    white-space: nowrap;
+    z-index: 4;
+  }
+
+  .chart-tooltip .tt-row { display: flex; align-items: center; gap: 7px; }
+  .chart-tooltip .tt-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .chart-tooltip[hidden] { display: none; }
+
+  details.table-details {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 4px;
+  }
+
+  details.table-details summary {
+    cursor: pointer;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--accent-cost);
+    list-style: none;
+  }
+
+  details.table-details summary::-webkit-details-marker { display: none; }
+
+  details.table-details summary::before {
+    content: "▸ ";
+  }
+
+  details.table-details[open] summary::before {
+    content: "▾ ";
+  }
+
+  .month-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .month-card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 14px 16px;
+    background: var(--surface-card-alt);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .month-card.is-breakeven {
+    border-color: var(--accent-profit-pos);
+    background: var(--accent-profit-pos-tint);
+  }
+
+  .month-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .month-card-head-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .month-name {
+    font-weight: 800;
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .month-flag {
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--accent-profit-pos);
+    color: var(--surface-card);
+    white-space: nowrap;
+  }
+
+  .month-badge {
+    font-size: 0.92rem;
+    font-weight: 800;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .month-badge.is-good { background: var(--accent-profit-pos-tint); color: var(--accent-profit-pos); }
+  .month-badge.is-bad { background: var(--accent-profit-neg-tint); color: var(--accent-profit-neg); }
+
+  .month-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+  }
+
+  .month-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .month-metric-label {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .month-metric-value {
+    font-size: 1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .month-metric-value.is-good { color: var(--accent-profit-pos); }
+  .month-metric-value.is-bad { color: var(--accent-profit-neg); }
+
+  .assumptions p {
+    font-size: 0.96rem;
+    color: var(--ink-muted);
+    margin: 0 0 12px;
+  }
+
+  .assumptions p:last-child { margin-bottom: 0; }
+
+  .assumptions strong { color: var(--ink); }
+
+  .footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    padding-top: 4px;
+  }
+
+  @media (min-width: 480px) {
+    .stat-tile.is-primary { grid-column: auto; }
+  }
+
+  /* ================= Ver.2 追加スタイル ================= */
+
+  .ver-badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-cost);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border-radius: 999px;
+    padding: 4px 12px;
+  }
+
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 6px;
+  }
+
+  .step-num {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent-cost);
+    color: #fff;
+    font-size: 0.98rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step-num.is-quiet {
+    background: var(--surface-card-alt);
+    color: var(--ink-muted);
+    border: 1px solid var(--border-strong);
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .step-lead {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    margin: 0 0 18px;
+    padding-left: 40px;
+  }
+
+  .tier-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .tier-btn {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    background: var(--surface-input);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 11px 4px;
+    cursor: pointer;
+    line-height: 1.25;
+  }
+
+  .tier-btn .tier-btn-sub {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--ink-faint);
+    margin-top: 2px;
+  }
+
+  .tier-btn.is-active {
+    background: var(--accent-cost-tint);
+    border-color: var(--accent-cost);
+    color: var(--accent-cost);
+  }
+
+  .tier-btn.is-active .tier-btn-sub { color: var(--accent-cost); }
+
+  .tier-btn:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .budget-hero {
+    background: var(--accent-cost-tint);
+    border: 1px solid var(--accent-cost);
+    border-radius: 16px;
+    padding: 18px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .budget-hero-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent-cost);
+  }
+
+  .budget-hero-value {
+    font-family: var(--font-body);
+    font-size: clamp(2.1rem, 12vw, 2.9rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  .budget-hero-value .unit {
+    font-size: 0.44em;
+    font-weight: 700;
+    margin-left: 4px;
+    letter-spacing: 0;
+  }
+
+  .budget-formula {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+    margin-top: 4px;
+  }
+
+  .cpa-ref {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .cpa-ref-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: var(--surface-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 12px;
+  }
+
+  .cpa-ref-row.is-active {
+    background: var(--accent-cost-tint);
+    border-color: var(--accent-cost);
+  }
+
+  .cpa-ref-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .cpa-ref-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+  }
+
+  .cpa-ref-mid {
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .cpa-ref-range {
+    font-size: 0.84rem;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .compare-box {
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+    padding: 12px 13px;
+    font-size: 0.93rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    margin-top: 12px;
+  }
+
+  .compare-box strong { color: var(--ink); }
+
+  .jump-link {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent-cost);
+    text-decoration: none;
+    border: 1px solid var(--accent-cost);
+    border-radius: 999px;
+    padding: 11px 14px;
+  }
+
+  .jump-link:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .source-list {
+    margin: 10px 0 0;
+    padding-left: 1.1em;
+    font-size: 0.84rem;
+    color: var(--ink-faint);
+    line-height: 1.7;
+  }
+
+  .source-list a { color: var(--ink-muted); }
+
+  .v1-link {
+    color: var(--ink-muted);
+  }
+</style>
+
+<div class="page">
+  <header class="masthead">
+    <span class="ver-badge">Ver.2</span>
+    <p class="eyebrow">中広グループ ／ 広告効果シミュレーション</p>
+    <h1 class="headline">販促費シミュレーション</h1>
+    <p class="subhead">「何人ほしいか」を入れるだけで、ジャンル別のCPA（顧客獲得単価）から<strong>必要な販促費</strong>を逆算します。そのまま12ヶ月の費用対効果まで確認できます。</p>
+  </header>
+
+  <section class="card step-card" aria-label="STEP1 獲得したい新規獲得数">
+    <div class="step-head">
+      <span class="step-num">1</span>
+      <h2 class="step-title">獲得したい新規獲得数</h2>
+    </div>
+    <p class="step-lead">毎月、何人の新規のお客様を増やしたいですか？</p>
+
+    <div class="field-list">
+      <div class="field">
+        <div class="field-label-row">
+          <label for="adNew">目標の新規獲得数</label>
+          <span class="hint">広告・販促で毎月上乗せしたい新規客数</span>
+        </div>
+        <input type="range" id="adNewRange" min="0" max="1000" step="1" value="45" />
+        <div class="field-input-row">
+          <input type="number" id="adNew" value="45" min="0" step="1" inputmode="numeric" />
+          <span class="field-suffix" id="adNewUnit">人 / 月</span>
+        </div>
+        <p class="note-line" id="targetYearNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card step-card" aria-label="STEP2 ジャンル別のCPA">
+    <div class="step-head">
+      <span class="step-num">2</span>
+      <h2 class="step-title">ジャンル別の CPA（顧客獲得単価）</h2>
+    </div>
+    <p class="step-lead">新規1人を獲得するのに、販促費がいくらかかるかの目安です。ジャンルを選ぶと相場が入ります。</p>
+
+    <div class="field-list">
+      <div class="field">
+        <div class="field-label-row">
+          <label for="genreSelect">ジャンルを選ぶ</label>
+          <span class="hint">選ぶとCPA相場と、下の試算条件（客単価・リピート率など）にも業界目安値が自動入力されます</span>
+        </div>
+        <select id="genreSelect"></select>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label>CPA の水準</label>
+          <span class="hint">競合の多さ・立地・広告の慣れ具合で選び分けてください</span>
+        </div>
+        <div class="tier-row" id="tierRow" role="group" aria-label="CPAの水準">
+          <button type="button" class="tier-btn" data-tier="low">低め<span class="tier-btn-sub">効率が良い</span></button>
+          <button type="button" class="tier-btn is-active" data-tier="mid">目安<span class="tier-btn-sub">相場の中央</span></button>
+          <button type="button" class="tier-btn" data-tier="high">高め<span class="tier-btn-sub">競合が多い</span></button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="cpa">CPA（新規1人あたりの販促費）</label>
+          <span class="hint">相場を自動入力します。自社の実績値があれば書き換えてください</span>
+        </div>
+        <input type="range" id="cpaRange" min="0" max="5000" step="100" value="2000" />
+        <div class="field-input-row">
+          <input type="text" id="cpa" value="2,000" inputmode="numeric" />
+          <span class="field-suffix">円 / 人</span>
+        </div>
+        <p class="note-line" id="cpaNote"></p>
+      </div>
+    </div>
+
+    <details class="table-details">
+      <summary>ジャンル別 CPA 相場の一覧を見る</summary>
+      <div class="cpa-ref" id="cpaRefTable"></div>
+    </details>
+  </section>
+
+  <section class="card step-card" aria-label="STEP3 必要な販促費">
+    <div class="step-head">
+      <span class="step-num">3</span>
+      <h2 class="step-title">必要な販促費</h2>
+    </div>
+    <p class="step-lead">「獲得したい新規獲得数 × CPA」で、目標達成に必要な販促費を算出します。</p>
+
+    <div class="budget-hero">
+      <span class="budget-hero-label">毎月 必要な販促費</span>
+      <span class="budget-hero-value" id="valBudgetMonth">—</span>
+      <span class="budget-formula" id="valBudgetFormula"></span>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-tile is-primary">
+        <span class="stat-label">年間 必要な販促費</span>
+        <span class="stat-value" id="valBudgetYear">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">年間の新規獲得目標</span>
+        <span class="stat-value" id="valBudgetPeople">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">年間売上（初回来店分）</span>
+        <span class="stat-value" id="valBudgetSales">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">販促費比率（対 初回売上）</span>
+        <span class="stat-value" id="valBudgetRatio">—</span>
+      </div>
+    </div>
+
+    <p class="note-line" id="budgetNote"></p>
+    <div class="compare-box" id="compareBox"></div>
+
+    <a class="jump-link" href="#result">▼ 12ヶ月の費用対効果まで見る</a>
+  </section>
+
+  <section class="card step-card" aria-label="STEP4 試算条件">
+    <div class="step-head">
+      <span class="step-num is-quiet">4</span>
+      <h2 class="step-title">試算条件（費用対効果用）</h2>
+    </div>
+    <p class="step-lead">ジャンルを選ぶと業界目安値が入ります。実際の数字に合わせて自由に編集してください。</p>
+
+    <div class="field-list">
+      <div class="field">
+        <div class="field-label-row">
+          <label for="unitPrice">客単価（組単価）</label>
+          <span class="hint">1人・1回あたりの購入額</span>
+        </div>
+        <input type="range" id="unitPriceRange" min="100" max="50000" step="any" value="3500" aria-hidden="true" tabindex="-1" />
+        <div class="field-input-row">
+          <input type="text" id="unitPrice" value="3,500" inputmode="numeric" />
+          <span class="field-suffix">円</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="normalNew">月の通常新規獲得数</label>
+          <span class="hint">広告なしで通常獲得できる人数（参考値）</span>
+        </div>
+        <input type="range" id="normalNewRange" min="0" max="1000" step="1" value="30" aria-hidden="true" tabindex="-1" />
+        <div class="field-input-row">
+          <input type="number" id="normalNew" value="30" min="0" step="1" inputmode="numeric" />
+          <span class="field-suffix" id="normalNewUnit">人 / 月</span>
+        </div>
+        <p class="note-line" id="adNewNote"></p>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="repeatRate">リピート率・再来店頻度</label>
+          <span class="hint">広告での新規集客数のうち、来店頻度のタイミングで再来店する割合（右で来店頻度を選択）</span>
+        </div>
+        <input type="range" id="repeatRateRange" min="0" max="100" step="1" value="30" />
+        <div class="field-input-row field-input-row-split">
+          <input type="number" id="repeatRate" value="30" min="0" max="100" step="1" inputmode="numeric" class="repeat-rate-input" />
+          <span class="field-suffix">%</span>
+          <select id="repeatFreq" class="repeat-freq-select">
+            <option value="1">毎月</option>
+            <option value="2">2ヶ月に1回</option>
+            <option value="3">3ヶ月に1回</option>
+            <option value="6">半年に1回</option>
+            <option value="12">年に1回</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="adArea">発行部数</label>
+          <span class="hint">出稿する媒体の発行部数を選択（部数が大きいほど掲載料も上がります）</span>
+        </div>
+        <select id="adArea">
+          <option value="120,000部以上">12万部以上</option>
+          <option value="85,000部以上">8.5万部以上</option>
+          <option value="65,000部以上">6.5万部以上</option>
+          <option value="45,000部以上">4.5万部以上</option>
+          <option value="25,000部以上">2.5万部以上</option>
+          <option value="25,000部未満">2.5万部未満</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="adSize">掲載区分・掲載頻度</label>
+          <span class="hint">掲載区分と頻度を選ぶと、中広グループ価格表の単価が自動反映されます</span>
+        </div>
+        <div class="field-input-row field-input-row-dual">
+          <select id="adSize" class="ad-area-select"></select>
+          <select id="adFreq" class="ad-freq-select">
+            <option value="1">毎月(年12回)</option>
+            <option value="2">隔月(年6回)</option>
+            <option value="3">年4回</option>
+            <option value="4">年3回</option>
+            <option value="0">単発</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="adCost">1回あたりの掲載料（情報誌）</label>
+          <span class="hint">中広グループ価格表の単価を自動反映します（編集可能）。制作費は別途お見積りです</span>
+        </div>
+        <input type="range" id="adCostRange" min="0" max="500000" step="5000" value="75000" />
+        <div class="field-input-row">
+          <input type="text" id="adCost" value="75,000" inputmode="numeric" />
+          <span class="field-suffix">円 / 回</span>
+        </div>
+        <p class="note-line" id="adCostNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card step-card" id="result" aria-label="STEP5 費用対効果シミュレーション">
+    <div class="step-head">
+      <span class="step-num is-quiet">5</span>
+      <h2 class="step-title">費用対効果シミュレーション</h2>
+    </div>
+    <p class="step-lead">情報誌に出稿した場合の、12ヶ月間の累計売上・累計広告費・投資回収を試算します。</p>
+
+    <div class="stat-grid">
+      <div class="stat-tile is-primary">
+        <span class="stat-label">投資回収（黒字化）まで</span>
+        <span class="stat-value" id="valBreakeven">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">1年間の広告費（合計）</span>
+        <span class="stat-value" id="valYearSpend">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">1年間の売上（広告分）</span>
+        <span class="stat-value" id="valYearRevenue">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">1年後の損益</span>
+        <span class="stat-value" id="valYearProfit">—</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--accent-revenue)"></span>累計売上（広告分）</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--accent-cost)"></span>累計広告費</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--accent-profit-pos)"></span>黒字の期間</span>
+      </div>
+      <div class="chart-wrap">
+        <svg id="chart" viewBox="0 0 360 220" role="img" aria-label="12ヶ月間の累計売上と累計広告費の推移"></svg>
+        <div class="chart-tooltip" id="chartTooltip" hidden></div>
+      </div>
+    </div>
+
+    <details class="table-details">
+      <summary>月別の内訳を見る</summary>
+      <div class="month-list" id="monthlyList"></div>
+    </details>
+  </section>
+
+  <section class="card assumptions" aria-label="この試算の考え方">
+    <h2 class="section-title">この試算の考え方</h2>
+    <p><strong>CPA（顧客獲得単価）</strong>は「販促費 ÷ 獲得できた新規客数」で、新規1人を獲得するのにかかった費用です。STEP2のCPA相場は、<strong>中核・地方都市における業種別の実勢CPAと月間販促費の相場</strong>を一次根拠にした値です。二次チェックとして <strong>CPA ＝ 掲載費 ÷（配布部数 × 反響率 × 成約率）</strong> でも成立する水準かを確認しています。掲載料は<strong>中広グループ価格表</strong>から、<strong>発行部数 × 掲載区分（住宅のみ／それ以外）× 年間掲載回数</strong>で引いています。</p>
+    <p>ネット広告（リスティング）の業界別平均CPAは紙媒体より高く出るため、そのままでは使えません。たとえば美容室はホットペッパービューティーの掲載料が地方の最下位プランでも月2.5万円〜、上位プランでは月数十万円かかり、これに予約経由売上の2%手数料とポイント負担が乗ります。<strong>月間の総販促費は10〜20万円が実態</strong>で、新規1人あたりのCPAは3,000〜6,000円。この水準を各ジャンルに当てはめています。あわせて<strong>情報誌の1枠は折込チラシ1枚より反響が出にくい</strong>ため、逆算すると反響率が <strong>0.001〜0.019%</strong> になる水準かも確認しています。これは折込チラシの業種別相場（飲食0.05〜0.5%／美容室0.1〜0.5%／クリニック0.05〜0.3%／学習塾0.1〜1.0%／不動産・リフォーム0.01〜0.2%）をいずれも下回る、控えめな見積もりです。業種ごとに「反響がそのまま来店になるか（飲食・美容・クリニック・車検）」「反響から契約までに絞り込みがあるか（塾・エステ・不動産・注文住宅・リフォーム）」を分けて成約率を掛けています。あわせて、業種ごとの「客単価に対して許容できる販促費の割合」（美容室なら客単価の20〜30%、住宅なら契約金額の3%前後）でも妥当性を確認しています。</p>
+    <p>おすすめの発行部数・掲載区分・頻度はジャンルごとに初期値として入れてあります（例：<strong>注文住宅・リフォームは「住宅のみ」区分 × 年12回</strong>、<strong>不動産・BtoBなど販促費の大きい業種は12万部以上</strong>）。発行部数・掲載区分・頻度を変えると、価格表の単価が自動で入れ替わります。中広グループ価格表にはサイズ別（1P・1/2Pなど）の単価がないため、この版で選べるのは<strong>掲載区分の2つ</strong>だけです。制作費は別途お見積りで、シミュレーションには含めていません。</p>
+    <p>STEP3の<strong>「必要な販促費」は、チラシ・Web・SNS・ポータルサイトなど情報誌以外も含めた、すべての販促手段を合わせた全販促費</strong>の目安です。STEP5の費用対効果シミュレーションは、そのうち<strong>情報誌に出稿した場合</strong>の売上・損益を計算しています。両者は範囲が違うため、STEP3では「必要販促費のうち情報誌が占める割合」を並べて表示しています。</p>
+    <p>広告経由の来店者数は、<strong>「広告を掲載した月に加わる新規集客数」＋「来店頻度のタイミングで発生するリピート来店数（新規集客数×リピート率）」</strong>として計算しています。リピート来店は広告を実施した回数を基準に発生し、2回目以降の掲載タイミングのうち「来店頻度」で選んだ間隔ごとにだけ計上されます（広告を打っていない月には発生しません）。</p>
+    <p>売上・損益は、あくまで<strong>広告によって上乗せされた分</strong>のみを計算しています。「月の通常新規獲得数」は比較の目安としての参考値で、試算そのものには影響しません。</p>
+    <p>CPAも反響も、季節・競合・原稿内容・立地など様々な要因で変動します。この試算は打ち合わせ時の目安としてご活用ください。</p>
+    <ul class="source-list">
+      <li>反響率の参考：<a href="https://www.meiko-kikaku.co.jp/blog/news/15387/" target="_blank" rel="noopener">チラシの反響率の目安はどれくらい？業種別の相場と上げ方【2026年版】（明光企画）</a></li>
+      <li><a href="https://chuco-ms.co.jp/media/category-5/post-133/" target="_blank" rel="noopener">チラシの反響率はどれくらい？目安や計算方法（中広メディアソリューションズ）</a></li>
+      <li><a href="https://kagurazaka-editors.jp/echo-rate-of-flyers/" target="_blank" rel="noopener">折込チラシの反響率は？効果測定に必要な反響率の考え方</a></li>
+      <li>許容CPAの参考：<a href="https://www.top-ad.co.jp/blog/archives/688" target="_blank" rel="noopener">美容室は新規集客単価【CPA】を知るべし（トップ広告社）</a></li>
+      <li><a href="https://freedom-mkt.co.jp/gmag/1925/" target="_blank" rel="noopener">ハウスメーカー・工務店のCPA相場（FREEDOM）</a></li>
+    </ul>
+  </section>
+
+  <footer class="footer">
+    <p>中広グループ — 販促費シミュレーション Ver.2（社内検討用ツール）2026.8.27</p>
+    <p><a class="v1-link" href="../">Ver.1（広告効果測定シミュレーション・中広グループ版）はこちら</a></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var MONTHS = 12;
+  var EXTENDED_MONTHS = 36;
+
+  var els = {
+    genreSelect: document.getElementById("genreSelect"),
+    tierRow: document.getElementById("tierRow"),
+    cpa: document.getElementById("cpa"),
+    cpaRange: document.getElementById("cpaRange"),
+    cpaNote: document.getElementById("cpaNote"),
+    cpaRefTable: document.getElementById("cpaRefTable"),
+    targetYearNote: document.getElementById("targetYearNote"),
+    valBudgetMonth: document.getElementById("valBudgetMonth"),
+    valBudgetFormula: document.getElementById("valBudgetFormula"),
+    valBudgetYear: document.getElementById("valBudgetYear"),
+    valBudgetPeople: document.getElementById("valBudgetPeople"),
+    valBudgetSales: document.getElementById("valBudgetSales"),
+    valBudgetRatio: document.getElementById("valBudgetRatio"),
+    budgetNote: document.getElementById("budgetNote"),
+    compareBox: document.getElementById("compareBox"),
+    unitPrice: document.getElementById("unitPrice"),
+    unitPriceRange: document.getElementById("unitPriceRange"),
+    normalNew: document.getElementById("normalNew"),
+    normalNewRange: document.getElementById("normalNewRange"),
+    repeatRate: document.getElementById("repeatRate"),
+    repeatRateRange: document.getElementById("repeatRateRange"),
+    repeatFreq: document.getElementById("repeatFreq"),
+    adNew: document.getElementById("adNew"),
+    adNewRange: document.getElementById("adNewRange"),
+    adArea: document.getElementById("adArea"),
+    adSize: document.getElementById("adSize"),
+    adNewUnit: document.getElementById("adNewUnit"),
+    normalNewUnit: document.getElementById("normalNewUnit"),
+    adFreq: document.getElementById("adFreq"),
+    adCost: document.getElementById("adCost"),
+    adCostRange: document.getElementById("adCostRange"),
+    adNewNote: document.getElementById("adNewNote"),
+    adCostNote: document.getElementById("adCostNote"),
+    valBreakeven: document.getElementById("valBreakeven"),
+    valYearSpend: document.getElementById("valYearSpend"),
+    valYearRevenue: document.getElementById("valYearRevenue"),
+    valYearProfit: document.getElementById("valYearProfit"),
+    chart: document.getElementById("chart"),
+    chartTooltip: document.getElementById("chartTooltip"),
+    monthlyList: document.getElementById("monthlyList")
+  };
+
+  var BASE_PRICE_RANGE = { min: 100, max: 50000, step: "any" };
+
+  /* ジャンル別 CPA（顧客獲得単価）の目安。
+     low / mid / high = 全販促費ベースの新規1人あたり獲得コスト（円）。
+     一次根拠は「中核・地方都市における業種別の実勢CPAと月間販促費の相場」。
+     preset.size = おすすめの掲載区分（住宅のみ／それ以外）
+     preset.adArea = おすすめの発行部数。必要販促費の規模に見合う版を初期値にしている。 */
+  var GENRES = [
+    {
+      key: "gourmet", unit: "人", label: "グルメ（飲食店・カフェ）",
+      low: 1000, mid: 2000, high: 3000,
+      basis: "地方都市の実勢CPAは1,000〜3,000円、月間販促費の相場は5〜15万円。目標45人×2,000円＝月9万円で相場内",
+      preset: { unitPrice: 3500, normalNew: 30, repeatRate: 30, revisitInterval: 1, adNew: 45, adArea: "45,000部以上", size: "other", freq: 1 }
+    },
+    {
+      key: "beauty", unit: "人", label: "ビューティー（美容室・ネイル・リラク）",
+      low: 3000, mid: 4500, high: 6000,
+      basis: "地方都市の実勢CPAは3,000〜6,000円、月間販促費の相場は10〜20万円。ホットペッパービューティーは最下位プランでも月2.5万円〜なので、この水準が実態",
+      preset: { unitPrice: 6000, normalNew: 20, repeatRate: 50, revisitInterval: 2, adNew: 30, adArea: "45,000部以上", size: "other", freq: 1 }
+    },
+    {
+      key: "esthe", unit: "件", label: "エステ・脱毛・痩身",
+      low: 4000, mid: 8000, high: 12000,
+      basis: "地方都市の実勢CPAは4,000〜12,000円、月間販促費の相場は10〜25万円。コース契約前提でLTVから逆算できるため、来店型より高いCPAが許容される",
+      preset: { unitPrice: 30000, normalNew: 10, repeatRate: 60, revisitInterval: 1, adNew: 15, adArea: "45,000部以上", size: "other", freq: 1, priceRange: { min: 0, max: 200000, step: 5000 } }
+    },
+    {
+      key: "school", unit: "人", label: "スクール（教室・習い事・塾）",
+      low: 8000, mid: 14000, high: 20000,
+      basis: "地方都市の実勢CPAは8,000〜20,000円、月間販促費の相場は10〜20万円。客単価は入会金＋教材費＋初月月謝の初回売上で見ている",
+      preset: { unitPrice: 45000, normalNew: 7, repeatRate: 85, revisitInterval: 1, adNew: 10, adArea: "45,000部以上", size: "other", freq: 1 }
+    },
+    {
+      key: "clinic", unit: "人", label: "医療・クリニック（歯科・整体・接骨院）",
+      low: 5000, mid: 8000, high: 12000,
+      basis: "地方都市の実勢CPAは5,000〜12,000円、月間販促費の相場は15〜30万円。客単価は初診＋検査＋処置の初回売上（自由診療を含む平均）で見ている",
+      preset: { unitPrice: 12000, normalNew: 18, repeatRate: 50, revisitInterval: 1, adNew: 25, adArea: "120,000部以上", size: "other", freq: 1 }
+    },
+    {
+      key: "shop", unit: "人", label: "ショップ（物販店）",
+      low: 2000, mid: 3500, high: 5000,
+      basis: "地方都市の実勢CPAは2,000〜5,000円、月間販促費の相場は5〜15万円。客単価は初回購入額（雑貨からアパレルまでの中間）で見ている",
+      preset: { unitPrice: 6000, normalNew: 25, repeatRate: 30, revisitInterval: 3, adNew: 35, adArea: "45,000部以上", size: "other", freq: 1 }
+    },
+    {
+      key: "chumon", unit: "棟", label: "注文住宅（新築・工務店・ハウスメーカー）",
+      low: 50000, mid: 100000, high: 150000,
+      basis: "地方都市の実勢CPA（契約1棟あたり）は50,000〜150,000円、月間販促費の相場は30〜100万円。契約金額3,000万円に対して0.3%で、業界目安「契約金額の3%」に対してかなり堅めの設定",
+      preset: { unitPrice: 30000000, normalNew: 2, repeatRate: 1, revisitInterval: 12, adNew: 3, adArea: "45,000部以上", size: "housing", freq: 1, priceRange: { min: 0, max: 100000000, step: 1000000 } }
+    },
+    {
+      key: "reform", unit: "件", label: "リフォーム（改装・水回り・外壁）",
+      low: 30000, mid: 50000, high: 80000,
+      basis: "地方都市の実勢CPA（問合せ・反響1件あたり）は30,000〜80,000円、月間販促費の相場は20〜50万円。リピートは少ないが1件あたりの粗利が大きいため、この水準でも利益が残る",
+      preset: { unitPrice: 1000000, normalNew: 3, repeatRate: 5, revisitInterval: 12, adNew: 5, adArea: "45,000部以上", size: "housing", freq: 1, priceRange: { min: 0, max: 5000000, step: 100000 } }
+    },
+    {
+      key: "realestate", unit: "件", label: "不動産（賃貸・売買仲介）",
+      low: 30000, mid: 50000, high: 80000,
+      basis: "地方都市の実勢CPAは30,000〜80,000円、月間販促費の相場は20〜60万円。資料請求や内見の段階で数万円のCPAを設定しても、仲介手数料で回収できる",
+      preset: { unitPrice: 300000, normalNew: 5, repeatRate: 5, revisitInterval: 12, adNew: 8, adArea: "120,000部以上", size: "other", freq: 1, priceRange: { min: 0, max: 2000000, step: 50000 } }
+    },
+    {
+      key: "car", unit: "件", label: "車・バイク（販売・整備・車検）",
+      low: 10000, mid: 17000, high: 25000,
+      basis: "地方都市の実勢CPAは10,000〜25,000円、月間販促費の相場は15〜30万円。車検・整備で毎年戻ってくる前提なので、LTVから逆算して1〜2万円台のCPAが成立する",
+      preset: { unitPrice: 50000, normalNew: 8, repeatRate: 60, revisitInterval: 12, adNew: 12, adArea: "120,000部以上", size: "other", freq: 1, priceRange: { min: 0, max: 300000, step: 5000 } }
+    },
+    {
+      key: "leisure", unit: "人", label: "レジャー・旅行・宿泊",
+      low: 3000, mid: 5000, high: 8000,
+      basis: "地方都市の実勢CPAは3,000〜8,000円、月間販促費の相場は10〜25万円。日帰りレジャー・温浴施設の利用を想定",
+      preset: { unitPrice: 8000, normalNew: 25, repeatRate: 25, revisitInterval: 6, adNew: 35, adArea: "45,000部以上", size: "other", freq: 1 }
+    },
+    {
+      key: "ceremony", unit: "件", label: "冠婚葬祭（式場・葬儀・仏事）",
+      low: 30000, mid: 50000, high: 70000,
+      basis: "地方都市の実勢CPAは30,000〜70,000円、月間販促費の相場は20〜50万円。検討期間が長く、相談・見学の段階で数万円のCPAを投じても1件の粗利で回収できる",
+      preset: { unitPrice: 1500000, normalNew: 4, repeatRate: 1, revisitInterval: 12, adNew: 6, adArea: "120,000部以上", size: "other", freq: 1, priceRange: { min: 0, max: 3000000, step: 100000 } }
+    },
+    {
+      key: "btob", unit: "件", label: "BtoB・士業・各種サービス",
+      low: 20000, mid: 35000, high: 50000,
+      basis: "地方都市の実勢CPAは20,000〜50,000円、月間販促費の相場は15〜40万円。問合せ1件あたりの単価。紙媒体では反響が出にくい業種",
+      preset: { unitPrice: 200000, normalNew: 5, repeatRate: 20, revisitInterval: 12, adNew: 8, adArea: "120,000部以上", size: "other", freq: 1, priceRange: { min: 0, max: 1000000, step: 20000 } }
+    },
+    {
+      key: "average", unit: "人", label: "全業種の平均（業種が決まっていないとき）",
+      low: 3000, mid: 8000, high: 20000,
+      basis: "13ジャンルの実勢CPAの幅を踏まえた中間帯。業種が決まったら必ず選び直してください",
+      preset: null
+    }
+  ];
+
+  var DEFAULT_GENRE_KEY = "gourmet";
+  var currentGenre = GENRES[0];
+
+  /* 中広グループ価格表は「掲載区分（住宅のみ／それ以外）× 発行部数 × 年間掲載回数」の3軸。
+     サイズ別（1P・1/2P等）の価格は価格表に存在しないため、
+     選べるのは掲載区分の2つだけ。 */
+  var SIZES = [
+    { key: "housing", label: "住宅のみ（住宅特集）", group: "掲載区分", seisaku: 0 },
+    { key: "other",   label: "それ以外（一般）",     group: "掲載区分", seisaku: 0 }
+  ];
+
+  /* 掲載料金（1回あたり／円）。中広グループ価格表より転記。
+     頻度キー: "1"=毎月(年12回) / "2"=隔月(年6回) / "3"=年4回 / "4"=年3回 / "0"=単発 */
+  var PRICE = {
+    housing: {
+      "120,000部以上": { "1": 352000, "2": 435600, "3": 459800, "4": 459800, "0": 580800 },
+      "85,000部以上":  { "1": 288000, "2": 356400, "3": 376200, "4": 376200, "0": 475200 },
+      "65,000部以上":  { "1": 264000, "2": 326700, "3": 344900, "4": 344900, "0": 435600 },
+      "45,000部以上":  { "1": 211200, "2": 261400, "3": 275900, "4": 275900, "0": 348500 },
+      "25,000部以上":  { "1": 158400, "2": 196100, "3": 207000, "4": 207000, "0": 261400 },
+      "25,000部未満":  { "1": 135000, "2": 167100, "3": 176400, "4": 176400, "0": 222900 }
+    },
+    other: {
+      "120,000部以上": { "1": 123200, "2": 152500, "3": 161000, "4": 161000, "0": 203300 },
+      "85,000部以上":  { "1":  96000, "2": 118800, "3": 125400, "4": 125400, "0": 158400 },
+      "65,000部以上":  { "1":  88000, "2": 108900, "3": 115000, "4": 115000, "0": 145200 },
+      "45,000部以上":  { "1":  70400, "2":  87200, "3":  92000, "4":  92000, "0": 116200 },
+      "25,000部以上":  { "1":  52800, "2":  65400, "3":  69000, "4":  69000, "0":  87200 },
+      "25,000部未満":  { "1":  41000, "2":  50900, "3":  53600, "4":  53600, "0":  67800 }
+    }
+  };
+
+  /* ジャンルによって数える対象が変わる（人／件／棟）。 */
+  function unitOf() {
+    return (currentGenre && currentGenre.unit) || "人";
+  }
+
+  function renderUnits() {
+    var u = unitOf();
+    els.adNewUnit.textContent = u + " / 月";
+    els.normalNewUnit.textContent = u + " / 月";
+  }
+
+  function findSize(key) {
+    for (var i = 0; i < SIZES.length; i++) {
+      if (SIZES[i].key === key) return SIZES[i];
+    }
+    return null;
+  }
+
+  function sizeAvailable(size, area) {
+    return !!(PRICE[size.key] && PRICE[size.key][area]);
+  }
+
+  /* 掲載区分はどの発行部数でも選べる。 */
+  function rebuildSizeOptions() {
+    var area = els.adArea.value;
+    var want = els.adSize.value;
+    els.adSize.innerHTML = "";
+    var stillThere = false;
+    SIZES.forEach(function (s) {
+      if (!sizeAvailable(s, area)) return;
+      var o = document.createElement("option");
+      o.value = s.key;
+      o.textContent = s.label;
+      els.adSize.appendChild(o);
+      if (s.key === want) stillThere = true;
+    });
+    els.adSize.value = stillThere ? want : "other";
+  }
+
+  function updateAdCostFromTable() {
+    var sizeKey = els.adSize.value;
+    var area = els.adArea.value;
+    var freqKey = els.adFreq.value;
+    var table = PRICE[sizeKey] && PRICE[sizeKey][area];
+    if (!table) return;
+    var price = table[freqKey];
+    if (price === undefined) return;
+    els.adCostRange.value = price;
+    els.adCost.value = price.toLocaleString("ja-JP");
+  }
+
+  function pairInputs(numberEl, rangeEl) {
+    numberEl.addEventListener("input", function () {
+      var v = numberEl.value;
+      if (rangeEl && v !== "") rangeEl.value = v;
+      render();
+    });
+    if (rangeEl) {
+      rangeEl.addEventListener("input", function () {
+        numberEl.value = rangeEl.value;
+        render();
+      });
+    }
+  }
+
+  function formatDigits(raw) {
+    var digits = String(raw).replace(/[^0-9]/g, "");
+    digits = digits.replace(/^0+(?=\d)/, "");
+    if (digits === "") return "";
+    return Number(digits).toLocaleString("ja-JP");
+  }
+
+  function pairCommaInputs(numberEl, rangeEl, snapFn) {
+    numberEl.addEventListener("input", function () {
+      var caret = numberEl.selectionStart;
+      var digitsBeforeCaret = numberEl.value.slice(0, caret).replace(/[^0-9]/g, "").length;
+      var formatted = formatDigits(numberEl.value);
+      numberEl.value = formatted;
+
+      var pos = 0, seen = 0;
+      while (pos < formatted.length && seen < digitsBeforeCaret) {
+        if (/[0-9]/.test(formatted[pos])) seen++;
+        pos++;
+      }
+      numberEl.setSelectionRange(pos, pos);
+
+      if (rangeEl) {
+        var numVal = formatted === "" ? 0 : Number(formatted.replace(/,/g, ""));
+        rangeEl.value = numVal;
+      }
+      render();
+    });
+    if (rangeEl) {
+      rangeEl.addEventListener("input", function () {
+        var v = Number(rangeEl.value);
+        if (snapFn) {
+          v = snapFn(v);
+          rangeEl.value = v;
+        }
+        numberEl.value = v.toLocaleString("ja-JP");
+        render();
+      });
+    }
+  }
+
+  function snapUnitPrice(raw) {
+    var maxNow = Number(els.unitPriceRange.max);
+    if (maxNow > 50000) {
+      var stepNow = Number(els.unitPriceRange.step) || 1;
+      return Math.round(raw / stepNow) * stepNow;
+    }
+    if (raw <= 1000) return Math.round(raw / 100) * 100;
+    return Math.round(raw / 500) * 500;
+  }
+
+  /* ---------- STEP2: ジャンル別CPA ---------- */
+
+  function applyCpaRange(g) {
+    var max = Math.ceil((g.high * 1.4) / 1000) * 1000;
+    if (max < 5000) max = 5000;
+    var step;
+    if (max > 200000) step = 5000;
+    else if (max > 50000) step = 1000;
+    else if (max > 10000) step = 500;
+    else step = 100;
+    els.cpaRange.min = 0;
+    els.cpaRange.max = max;
+    els.cpaRange.step = step;
+  }
+
+  function setCpa(value) {
+    els.cpaRange.value = value;
+    els.cpa.value = Number(value).toLocaleString("ja-JP");
+  }
+
+  GENRES.forEach(function (g) {
+    var opt = document.createElement("option");
+    opt.value = g.key;
+    opt.textContent = g.label;
+    els.genreSelect.appendChild(opt);
+  });
+  els.genreSelect.value = currentGenre.key;
+
+  function findGenre(key) {
+    for (var i = 0; i < GENRES.length; i++) {
+      if (GENRES[i].key === key) return GENRES[i];
+    }
+    return GENRES[0];
+  }
+
+  currentGenre = findGenre(DEFAULT_GENRE_KEY);
+  els.genreSelect.value = currentGenre.key;
+
+  function applyPreset(p) {
+    if (!p) return;
+    var range = p.priceRange || BASE_PRICE_RANGE;
+    els.unitPriceRange.min = range.min;
+    els.unitPriceRange.max = range.max;
+    els.unitPriceRange.step = range.step;
+
+    els.unitPriceRange.value = p.unitPrice;
+    els.unitPrice.value = p.unitPrice.toLocaleString("ja-JP");
+
+    els.normalNewRange.value = p.normalNew;
+    els.normalNew.value = p.normalNew;
+
+    els.repeatRateRange.value = p.repeatRate;
+    els.repeatRate.value = p.repeatRate;
+    els.repeatFreq.value = String(p.revisitInterval);
+
+    els.adNewRange.value = p.adNew;
+    els.adNew.value = p.adNew;
+
+    els.adArea.value = p.adArea;
+    rebuildSizeOptions();
+    if (p.size) els.adSize.value = p.size;
+    els.adFreq.value = String(p.freq);
+  }
+
+  els.genreSelect.addEventListener("change", function () {
+    currentGenre = findGenre(els.genreSelect.value);
+    applyCpaRange(currentGenre);
+    setCpa(currentGenre.mid);
+    applyPreset(currentGenre.preset);
+    updateAdCostFromTable();
+    renderCpaRef();
+    render();
+  });
+
+  els.tierRow.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest(".tier-btn") : null;
+    if (!btn) return;
+    var tier = btn.getAttribute("data-tier");
+    if (!tier) return;
+    setCpa(currentGenre[tier]);
+    render();
+  });
+
+  function renderTierState(cpaValue) {
+    var btns = els.tierRow.querySelectorAll(".tier-btn");
+    for (var i = 0; i < btns.length; i++) {
+      var tier = btns[i].getAttribute("data-tier");
+      btns[i].classList.toggle("is-active", Number(currentGenre[tier]) === Math.round(cpaValue));
+    }
+  }
+
+  function renderCpaRef() {
+    var wrap = els.cpaRefTable;
+    wrap.innerHTML = "";
+    GENRES.forEach(function (g) {
+      var row = document.createElement("div");
+      row.className = "cpa-ref-row" + (g.key === currentGenre.key ? " is-active" : "");
+      row.innerHTML =
+        "<div class=\"cpa-ref-top\">" +
+          "<span class=\"cpa-ref-name\">" + g.label + "</span>" +
+          "<span class=\"cpa-ref-mid\">" + yen(g.mid) + "</span>" +
+        "</div>" +
+        "<span class=\"cpa-ref-range\">相場 " + yen(g.low) + " 〜 " + yen(g.high) + "　／　" + g.basis + "</span>";
+      wrap.appendChild(row);
+    });
+  }
+
+  /* ---------- 入力の紐付け ---------- */
+
+  pairCommaInputs(els.unitPrice, els.unitPriceRange, snapUnitPrice);
+  pairInputs(els.normalNew, els.normalNewRange);
+  pairInputs(els.repeatRate, els.repeatRateRange);
+  pairInputs(els.adNew, els.adNewRange);
+  pairCommaInputs(els.cpa, els.cpaRange);
+  pairCommaInputs(els.adCost, els.adCostRange);
+
+  els.adFreq.addEventListener("change", function () {
+    updateAdCostFromTable();
+    render();
+  });
+  els.adArea.addEventListener("change", function () {
+    rebuildSizeOptions();
+    updateAdCostFromTable();
+    render();
+  });
+  els.adSize.addEventListener("change", function () {
+    updateAdCostFromTable();
+    render();
+  });
+  els.repeatFreq.addEventListener("change", render);
+
+  function num(el, fallback) {
+    var raw = String(el.value).replace(/,/g, "");
+    var v = parseFloat(raw);
+    return isNaN(v) ? fallback : v;
+  }
+
+  function yen(v) {
+    return "¥" + Math.round(v).toLocaleString("ja-JP");
+  }
+
+  function man(v) {
+    var m = v / 10000;
+    var digits = Math.abs(m) < 10 ? 1 : 0;
+    return m.toLocaleString("ja-JP", { minimumFractionDigits: digits, maximumFractionDigits: digits }) + "万円";
+  }
+
+  function simulate(unitPrice, repeatRate, revisitInterval, adNew, adCost, freq, months) {
+    var rows = [];
+    var cumRevenue = 0;
+    var cumSpend = 0;
+    var isSingle = freq === 0;
+    var safeFreq = freq > 0 ? freq : 1;
+    var safeInterval = revisitInterval > 0 ? revisitInterval : 1;
+    var adOccurrence = 0;
+    for (var m = 1; m <= months; m++) {
+      var isAdMonth = isSingle ? (m === 1) : ((m - 1) % safeFreq === 0);
+      var isVisitMonth = false;
+      if (isAdMonth) {
+        adOccurrence++;
+        isVisitMonth = (adOccurrence > 1) && (adOccurrence % safeInterval === 0);
+      }
+      var active = (isAdMonth ? adNew : 0) + (isVisitMonth ? adNew * repeatRate : 0);
+      var monthlyRevenue = active * unitPrice;
+      var monthlyAdSpend = isAdMonth ? adCost : 0;
+      cumRevenue += monthlyRevenue;
+      cumSpend += monthlyAdSpend;
+      var monthlyProfit = monthlyRevenue - monthlyAdSpend;
+      var cumProfit = cumRevenue - cumSpend;
+      rows.push({
+        month: m,
+        active: active,
+        monthlyRevenue: monthlyRevenue,
+        monthlyAdSpend: monthlyAdSpend,
+        monthlyProfit: monthlyProfit,
+        cumRevenue: cumRevenue,
+        cumAdSpend: cumSpend,
+        cumProfit: cumProfit
+      });
+    }
+    return rows;
+  }
+
+  function findBreakeven(rows) {
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].cumProfit >= 0) return rows[i].month;
+    }
+    return null;
+  }
+
+  function renderStats(rows12, breakevenMonth, breakevenExtended) {
+    var beText;
+    if (breakevenMonth) {
+      beText = breakevenMonth + "<span class=\"unit\">ヶ月目</span>";
+    } else if (breakevenExtended) {
+      beText = breakevenExtended + "<span class=\"unit\">ヶ月目（1年超）</span>";
+    } else {
+      beText = EXTENDED_MONTHS + "<span class=\"unit\">ヶ月以内に黒字化せず</span>";
+    }
+    els.valBreakeven.innerHTML = beText;
+
+    var last = rows12[rows12.length - 1];
+    els.valYearSpend.innerHTML = man(last.cumAdSpend);
+    els.valYearRevenue.innerHTML = man(last.cumRevenue);
+
+    var profitEl = els.valYearProfit;
+    profitEl.innerHTML = (last.cumProfit >= 0 ? "+" : "") + man(last.cumProfit);
+    profitEl.classList.toggle("is-good", last.cumProfit >= 0);
+    profitEl.classList.toggle("is-bad", last.cumProfit < 0);
+  }
+
+  function renderNote(normalNew, adNew) {
+    if (normalNew <= 0) {
+      els.adNewNote.innerHTML = "通常獲得数が0" + unitOf() + "のため、比較の参考値は表示されません。";
+      return;
+    }
+    var pct = Math.round((adNew / normalNew) * 100);
+    els.adNewNote.innerHTML =
+      "通常の新規獲得数 <strong>" + normalNew + unitOf() + "</strong> に対して、広告で <strong>+" + adNew + unitOf() + "（+" + pct + "%）</strong> の上乗せを見込む試算です。";
+  }
+
+  function seisakuNote() {
+    var sz = findSize(els.adSize.value);
+    if (!sz) return "";
+    return "<br>掲載区分は <strong>" + sz.label + "</strong>。金額は中広グループ価格表の単価で、<strong>制作費は別途お見積り</strong>です。";
+  }
+
+  function renderAdCostNote(adCost, freq) {
+    if (freq === 0) {
+      els.adCostNote.innerHTML = "<strong>単発</strong>の広告費として、初月のみ計上します。" + seisakuNote();
+      return;
+    }
+    var monthlyAvg = adCost / (freq > 0 ? freq : 1);
+    els.adCostNote.innerHTML = "月平均では <strong>" + yen(monthlyAvg) + "</strong> 相当の掲載料です（掲載しない月は0円として計算）。" + seisakuNote();
+  }
+
+  function renderTable(rows, breakevenMonth) {
+    var list = els.monthlyList;
+    list.innerHTML = "";
+    rows.forEach(function (r) {
+      var isBreakeven = r.month === breakevenMonth;
+      var cumClass = r.cumProfit >= 0 ? "is-good" : "is-bad";
+      var monClass = r.monthlyProfit >= 0 ? "is-good" : "is-bad";
+
+      var card = document.createElement("div");
+      card.className = "month-card" + (isBreakeven ? " is-breakeven" : "");
+
+      card.innerHTML =
+        "<div class=\"month-card-head\">" +
+          "<span class=\"month-card-head-left\">" +
+            "<span class=\"month-name\">" + r.month + "ヶ月目</span>" +
+            (isBreakeven ? "<span class=\"month-flag\">黒字化</span>" : "") +
+          "</span>" +
+          "<span class=\"month-badge " + cumClass + "\">" + (r.cumProfit >= 0 ? "+" : "") + man(r.cumProfit) + "</span>" +
+        "</div>" +
+        "<div class=\"month-card-grid\">" +
+          "<div class=\"month-metric\"><span class=\"month-metric-label\">広告経由の獲得数</span><span class=\"month-metric-value\">" + r.active.toFixed(1) + unitOf() + "</span></div>" +
+          "<div class=\"month-metric\"><span class=\"month-metric-label\">月間損益</span><span class=\"month-metric-value " + monClass + "\">" + (r.monthlyProfit >= 0 ? "+" : "") + yen(r.monthlyProfit) + "</span></div>" +
+          "<div class=\"month-metric\"><span class=\"month-metric-label\">月間売上</span><span class=\"month-metric-value\">" + yen(r.monthlyRevenue) + "</span></div>" +
+          "<div class=\"month-metric\"><span class=\"month-metric-label\">月間広告費</span><span class=\"month-metric-value\">" + yen(r.monthlyAdSpend) + "</span></div>" +
+        "</div>";
+
+      list.appendChild(card);
+    });
+  }
+
+  var chartState = null;
+
+  function renderChart(rows) {
+    var svg = els.chart;
+    svg.innerHTML = "";
+
+    var W = 360, H = 220;
+    var margin = { top: 16, right: 10, bottom: 26, left: 58 };
+    var plotW = W - margin.left - margin.right;
+    var plotH = H - margin.top - margin.bottom;
+
+    var maxVal = 0;
+    rows.forEach(function (r) {
+      maxVal = Math.max(maxVal, r.cumRevenue, r.cumAdSpend);
+    });
+    if (maxVal <= 0) maxVal = 1;
+    maxVal *= 1.12;
+
+    function xAt(i) { return margin.left + (i / (rows.length - 1)) * plotW; }
+    function yAt(v) { return margin.top + plotH - (v / maxVal) * plotH; }
+
+    var ns = "http://www.w3.org/2000/svg";
+    function el(tag, attrs) {
+      var e = document.createElementNS(ns, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+
+    var styles = getComputedStyle(document.documentElement);
+    var cInk = styles.getPropertyValue("--ink-faint").trim();
+    var cBorder = styles.getPropertyValue("--border").trim();
+    var cCost = styles.getPropertyValue("--accent-cost").trim();
+    var cRevenue = styles.getPropertyValue("--accent-revenue").trim();
+    var cPos = styles.getPropertyValue("--accent-profit-pos").trim();
+    var cNeg = styles.getPropertyValue("--accent-profit-neg").trim();
+
+    var gGrid = el("g", {});
+    for (var g = 0; g <= 3; g++) {
+      var gv = (maxVal / 3) * g;
+      var gy = yAt(gv);
+      gGrid.appendChild(el("line", {
+        x1: margin.left, x2: W - margin.right, y1: gy, y2: gy,
+        stroke: cBorder, "stroke-width": 1
+      }));
+      var label = el("text", {
+        x: margin.left - 8, y: gy + 4, "text-anchor": "end",
+        "font-size": 12.5, fill: cInk, "font-family": "var(--font-body)"
+      });
+      label.textContent = man(gv);
+      gGrid.appendChild(label);
+    }
+    svg.appendChild(gGrid);
+
+    var gX = el("g", {});
+    rows.forEach(function (r, i) {
+      if (rows.length > 12 && i % 2 !== 0 && i !== rows.length - 1) return;
+      var t = el("text", {
+        x: xAt(i), y: H - 7, "text-anchor": "middle",
+        "font-size": 12.5, fill: cInk
+      });
+      t.textContent = r.month;
+      gX.appendChild(t);
+    });
+    svg.appendChild(gX);
+
+    function pathFor(key) {
+      return rows.map(function (r, i) {
+        return (i === 0 ? "M" : "L") + xAt(i).toFixed(1) + "," + yAt(r[key]).toFixed(1);
+      }).join(" ");
+    }
+
+    var revenuePath = pathFor("cumRevenue");
+    var costPath = pathFor("cumAdSpend");
+
+    function areaBetween(aboveKey, belowKey, clipAbove) {
+      var top = [], bottom = [];
+      rows.forEach(function (r, i) {
+        var a = r[aboveKey], b = r[belowKey];
+        var useA = clipAbove ? Math.max(a, b) : Math.min(a, b);
+        var useB = b;
+        top.push([xAt(i), yAt(useA)]);
+        bottom.push([xAt(i), yAt(b)]);
+      });
+      var d = "M" + top.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" L");
+      d += " L" + bottom.slice().reverse().map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" L");
+      d += " Z";
+      return d;
+    }
+
+    var posAreaD = rows.map(function (r, i) {
+      var top = r.cumRevenue >= r.cumAdSpend ? r.cumRevenue : r.cumAdSpend;
+      return (i === 0 ? "M" : "L") + xAt(i).toFixed(1) + "," + yAt(top).toFixed(1);
+    }).join(" ") + " L" + rows.slice().reverse().map(function (r, idx) {
+      var i = rows.length - 1 - idx;
+      return xAt(i).toFixed(1) + "," + yAt(r.cumAdSpend).toFixed(1);
+    }).join(" L") + " Z";
+
+    var negAreaD = rows.map(function (r, i) {
+      var top = r.cumRevenue < r.cumAdSpend ? r.cumRevenue : r.cumAdSpend;
+      return (i === 0 ? "M" : "L") + xAt(i).toFixed(1) + "," + yAt(top).toFixed(1);
+    }).join(" ") + " L" + rows.slice().reverse().map(function (r, idx) {
+      var i = rows.length - 1 - idx;
+      return xAt(i).toFixed(1) + "," + yAt(r.cumAdSpend).toFixed(1);
+    }).join(" L") + " Z";
+
+    svg.appendChild(el("path", { d: posAreaD, fill: cPos, opacity: 0.14, stroke: "none" }));
+    svg.appendChild(el("path", { d: negAreaD, fill: cNeg, opacity: 0.14, stroke: "none" }));
+
+    svg.appendChild(el("path", { d: costPath, fill: "none", stroke: cCost, "stroke-width": 2.25, "stroke-linejoin": "round" }));
+    svg.appendChild(el("path", { d: revenuePath, fill: "none", stroke: cRevenue, "stroke-width": 2.75, "stroke-linejoin": "round" }));
+
+    var lastI = rows.length - 1;
+    svg.appendChild(el("circle", { cx: xAt(lastI), cy: yAt(rows[lastI].cumRevenue), r: 4, fill: cRevenue }));
+    svg.appendChild(el("circle", { cx: xAt(lastI), cy: yAt(rows[lastI].cumAdSpend), r: 4, fill: cCost }));
+
+    var beIndex = -1;
+    for (var i = 1; i < rows.length; i++) {
+      if (rows[i - 1].cumProfit < 0 && rows[i].cumProfit >= 0) { beIndex = i; break; }
+    }
+    if (beIndex >= 0) {
+      var bx = xAt(beIndex);
+      svg.appendChild(el("line", {
+        x1: bx, x2: bx, y1: margin.top, y2: margin.top + plotH,
+        stroke: cPos, "stroke-width": 1.5, "stroke-dasharray": "3,3"
+      }));
+      var beLabel = el("text", {
+        x: bx, y: margin.top - 4, "text-anchor": "middle",
+        "font-size": 11.5, "font-weight": 700, fill: cPos
+      });
+      beLabel.textContent = "黒字化";
+      svg.appendChild(beLabel);
+    }
+
+    var hoverLine = el("line", { x1: 0, x2: 0, y1: margin.top, y2: margin.top + plotH, stroke: cInk, "stroke-width": 1, opacity: 0 });
+    svg.appendChild(hoverLine);
+
+    var hitRect = el("rect", {
+      x: margin.left, y: margin.top, width: plotW, height: plotH,
+      fill: "transparent"
+    });
+    svg.appendChild(hitRect);
+
+    chartState = { rows: rows, xAt: xAt, margin: margin, plotW: plotW, hoverLine: hoverLine, cRevenue: cRevenue, cCost: cCost };
+
+    function pointerMove(clientX) {
+      var rect = svg.getBoundingClientRect();
+      var scale = W / rect.width;
+      var localX = (clientX - rect.left) * scale;
+      var idx = Math.round(((localX - margin.left) / plotW) * (rows.length - 1));
+      idx = Math.max(0, Math.min(rows.length - 1, idx));
+      var r = rows[idx];
+      hoverLine.setAttribute("x1", xAt(idx));
+      hoverLine.setAttribute("x2", xAt(idx));
+      hoverLine.setAttribute("opacity", 1);
+
+      var tt = els.chartTooltip;
+      tt.hidden = false;
+      tt.innerHTML =
+        "<div><strong>" + r.month + "ヶ月目</strong></div>" +
+        "<div class=\"tt-row\"><span class=\"tt-dot\" style=\"background:" + cRevenue + "\"></span>累計売上 " + yen(r.cumRevenue) + "</div>" +
+        "<div class=\"tt-row\"><span class=\"tt-dot\" style=\"background:" + cCost + "\"></span>累計広告費 " + yen(r.cumAdSpend) + "</div>" +
+        "<div class=\"tt-row\">累計損益 " + (r.cumProfit >= 0 ? "+" : "") + yen(r.cumProfit) + "</div>";
+
+      var wrapRect = svg.parentElement.getBoundingClientRect();
+      var px = ((xAt(idx) / W) * rect.width) + (rect.left - wrapRect.left);
+      var py = ((yAt(Math.max(r.cumRevenue, r.cumAdSpend)) / H) * rect.height) + (rect.top - wrapRect.top);
+      tt.style.left = px + "px";
+      tt.style.top = py + "px";
+    }
+
+    function hide() {
+      hoverLine.setAttribute("opacity", 0);
+      els.chartTooltip.hidden = true;
+    }
+
+    hitRect.addEventListener("mousemove", function (e) { pointerMove(e.clientX); });
+    hitRect.addEventListener("mouseleave", hide);
+    hitRect.addEventListener("touchstart", function (e) {
+      pointerMove(e.touches[0].clientX);
+    }, { passive: true });
+    hitRect.addEventListener("touchmove", function (e) {
+      pointerMove(e.touches[0].clientX);
+    }, { passive: true });
+    hitRect.addEventListener("touchend", function () {
+      setTimeout(hide, 2500);
+    });
+  }
+
+  /* ---------- STEP1 / STEP2 / STEP3 の描画 ---------- */
+
+  function renderTargetNote(target) {
+    if (target <= 0) {
+      els.targetYearNote.innerHTML = "獲得したい人数を入力してください。";
+      return;
+    }
+    els.targetYearNote.innerHTML =
+      "年間では <strong>" + (target * 12).toLocaleString("ja-JP") + unitOf() + "</strong> の新規獲得が目標です（" +
+      target.toLocaleString("ja-JP") + unitOf() + " × 12ヶ月）。";
+  }
+
+  function renderCpaNote(cpa) {
+    var shortLabel = currentGenre.label.replace(/（[^）]*）/g, "");
+    var html =
+      "<strong>" + shortLabel + "</strong>の相場は <strong>" +
+      yen(currentGenre.low) + " 〜 " + yen(currentGenre.high) + "</strong>（目安 " + yen(currentGenre.mid) + "）。" +
+      currentGenre.basis + "。";
+    if (cpa > 0 && cpa < currentGenre.low) {
+      html += "<br>入力値は相場より<strong>低め</strong>です。達成できれば効率の良い販促です。";
+    } else if (cpa > currentGenre.high) {
+      html += "<br>入力値は相場より<strong>高め</strong>です。競合が多い、または獲得が難しい条件を想定した数字になっています。";
+    }
+    els.cpaNote.innerHTML = html;
+  }
+
+  function renderBudget(target, cpa, unitPrice, adCost, freq) {
+    var budgetMonth = target * cpa;
+    var budgetYear = budgetMonth * 12;
+    var peopleYear = target * 12;
+    var salesYear = peopleYear * unitPrice;
+
+    els.valBudgetMonth.innerHTML = yen(budgetMonth) + "<span class=\"unit\">/月</span>";
+    els.valBudgetFormula.textContent =
+      target.toLocaleString("ja-JP") + "人 / 月 × CPA " + yen(cpa) + " = " + yen(budgetMonth) + " / 月";
+
+    els.valBudgetYear.innerHTML = budgetYear > 0 ? man(budgetYear) : "—";
+    els.valBudgetPeople.innerHTML = peopleYear.toLocaleString("ja-JP") + "<span class=\"unit\">" + unitOf() + "</span>";
+    els.valBudgetSales.innerHTML = salesYear > 0 ? man(salesYear) : "—";
+
+    var ratioEl = els.valBudgetRatio;
+    if (salesYear > 0) {
+      var ratio = (budgetYear / salesYear) * 100;
+      var digits = ratio < 100 ? 1 : 0;
+      ratioEl.innerHTML = ratio.toFixed(digits) + "<span class=\"unit\">%</span>";
+      ratioEl.classList.toggle("is-good", ratio <= 30);
+      ratioEl.classList.toggle("is-bad", ratio > 100);
+    } else {
+      ratioEl.innerHTML = "—";
+      ratioEl.classList.remove("is-good");
+      ratioEl.classList.remove("is-bad");
+    }
+
+    var note = "販促費比率は<strong>初回来店分の売上</strong>に対する比率です。目安は初回売上の20〜30%以内。リピートを含めた生涯売上（LTV）で見ると比率はさらに下がります。";
+    if (salesYear > 0 && budgetYear / salesYear > 1) {
+      note = "CPA が客単価を上回っているため、<strong>初回の売上だけでは回収できません</strong>。リピート前提（下のシミュレーション）で回収できるかを必ず確認してください。";
+    }
+    els.budgetNote.innerHTML = note;
+
+    var placements = (freq === 0) ? 1 : Math.ceil(12 / freq);
+    var ourYear = placements * adCost;
+    var areaLabel = els.adArea.value;
+    var freqLabel = els.adFreq.options[els.adFreq.selectedIndex].textContent;
+
+    if (budgetYear <= 0 || target <= 0) {
+      els.compareBox.innerHTML = "獲得したい人数と CPA を入力すると、必要販促費のうち情報誌が占める割合を表示します。";
+      return;
+    }
+
+    var html = "";
+    var share = (ourYear / budgetYear) * 100;
+
+    if (ourYear <= budgetYear) {
+      html =
+        "必要販促費 <strong>年間 " + yen(budgetYear) + "</strong> のうち、情報誌（" + areaLabel + "／" + freqLabel + "）は " +
+        "<strong>年間 " + yen(ourYear) + "</strong>。全販促費の <strong>" + share.toFixed(0) + "%</strong> にあたり、" +
+        "残り <strong>" + yen(budgetYear - ourYear) + "</strong> を他の販促（チラシ・Web・SNSなど）に配分できます。";
+    } else {
+      var fitTarget = cpa > 0 ? Math.round(ourYear / 12 / cpa) : 0;
+      html =
+        "情報誌（" + areaLabel + "／" + freqLabel + "）の広告費 <strong>年間 " + yen(ourYear) + "</strong> は、" +
+        "必要販促費 <strong>年間 " + yen(budgetYear) + "</strong> を <strong>" + yen(ourYear - budgetYear) + "</strong> 上回ります。" +
+        "この予算なら、目標を <strong>月 " + fitTarget.toLocaleString("ja-JP") + unitOf() + "</strong> まで引き上げる想定が釣り合います（CPA " + yen(cpa) + " のとき）。";
+    }
+
+    if (peopleYear > 0) {
+      html += "<br>参考：情報誌だけで年間 " + peopleYear.toLocaleString("ja-JP") + unitOf() + " を獲得できた場合、実質CPAは <strong>" +
+        yen(ourYear / peopleYear) + "</strong> になります。";
+    }
+
+    els.compareBox.innerHTML = html;
+  }
+
+  /* ---------- 全体の再計算 ---------- */
+
+  function render() {
+    var unitPrice = num(els.unitPrice, 0);
+    var normalNew = num(els.normalNew, 0);
+    var repeatRatePct = num(els.repeatRate, 0);
+    var adNew = num(els.adNew, 0);
+    var cpa = num(els.cpa, 0);
+    var adCost = num(els.adCost, 0);
+    var freqParsed = parseInt(els.adFreq.value, 10);
+    var freq = isNaN(freqParsed) ? 1 : freqParsed;
+    var revisitInterval = parseFloat(els.repeatFreq.value) || 1;
+    var repeatRate = Math.min(1, Math.max(0, repeatRatePct / 100));
+
+    renderUnits();
+    renderTargetNote(adNew);
+    renderTierState(cpa);
+    renderCpaNote(cpa);
+    renderBudget(adNew, cpa, unitPrice, adCost, freq);
+
+    var rowsExtended = simulate(unitPrice, repeatRate, revisitInterval, adNew, adCost, freq, EXTENDED_MONTHS);
+    var rows12 = rowsExtended.slice(0, MONTHS);
+
+    var breakevenMonth = findBreakeven(rows12);
+    var breakevenExtended = breakevenMonth ? null : findBreakeven(rowsExtended);
+
+    renderNote(normalNew, adNew);
+    renderAdCostNote(adCost, freq);
+    renderStats(rows12, breakevenMonth, breakevenExtended);
+    renderTable(rows12, breakevenMonth);
+    renderChart(rows12);
+  }
+
+  rebuildSizeOptions();
+  applyCpaRange(currentGenre);
+  setCpa(currentGenre.mid);
+  applyPreset(currentGenre.preset);
+  updateAdCostFromTable();
+  renderCpaRef();
+  render();
+
+  window.addEventListener("resize", function () {
+    if (chartState) renderChart(chartState.rows);
+  });
+})();
+</script>
