@@ -730,38 +730,15 @@
     <span class="ver-badge">Ver.2</span>
     <p class="eyebrow">中広グループ ／ 広告効果シミュレーション</p>
     <h1 class="headline">販促費シミュレーション</h1>
-    <p class="subhead">「何人ほしいか」を入れるだけで、ジャンル別のCPA（顧客獲得単価）から<strong>必要な販促費</strong>を逆算します。そのまま12ヶ月の費用対効果まで確認できます。</p>
+    <p class="subhead">ジャンルを選んで「何人ほしいか」を入れるだけで、CPA（顧客獲得単価）から<strong>必要な販促費</strong>を逆算します。そのまま12ヶ月の費用対効果まで確認できます。</p>
   </header>
 
-  <section class="card step-card" aria-label="STEP1 獲得したい新規獲得数">
+  <section class="card step-card" aria-label="STEP1 ジャンル別のCPA">
     <div class="step-head">
       <span class="step-num">1</span>
-      <h2 class="step-title">獲得したい新規獲得数</h2>
-    </div>
-    <p class="step-lead">毎月、何人の新規のお客様を増やしたいですか？</p>
-
-    <div class="field-list">
-      <div class="field">
-        <div class="field-label-row">
-          <label for="adNew">目標の新規獲得数</label>
-          <span class="hint">広告・販促で毎月上乗せしたい新規客数</span>
-        </div>
-        <input type="range" id="adNewRange" min="0" max="1000" step="1" value="45" />
-        <div class="field-input-row">
-          <input type="number" id="adNew" value="45" min="0" step="1" inputmode="numeric" />
-          <span class="field-suffix" id="adNewUnit">人 / 月</span>
-        </div>
-        <p class="note-line" id="targetYearNote"></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="card step-card" aria-label="STEP2 ジャンル別のCPA">
-    <div class="step-head">
-      <span class="step-num">2</span>
       <h2 class="step-title">ジャンル別の CPA（顧客獲得単価）</h2>
     </div>
-    <p class="step-lead">新規1人を獲得するのに、販促費がいくらかかるかの目安です。ジャンルを選ぶと相場が入ります。</p>
+    <p class="step-lead">まずは業種を選んでください。新規1人を獲得するのにかかる販促費（CPA）の相場が入ります。</p>
 
     <div class="field-list">
       <div class="field">
@@ -802,6 +779,29 @@
       <summary>ジャンル別 CPA 相場の一覧を見る</summary>
       <div class="cpa-ref" id="cpaRefTable"></div>
     </details>
+  </section>
+
+  <section class="card step-card" aria-label="STEP2 獲得したい新規獲得数">
+    <div class="step-head">
+      <span class="step-num">2</span>
+      <h2 class="step-title">獲得したい新規獲得数</h2>
+    </div>
+    <p class="step-lead">毎月、何人の新規のお客様を増やしたいですか？</p>
+
+    <div class="field-list">
+      <div class="field">
+        <div class="field-label-row">
+          <label for="adNew">目標の新規獲得数</label>
+          <span class="hint">広告・販促で毎月上乗せしたい新規客数</span>
+        </div>
+        <input type="range" id="adNewRange" min="0" max="1000" step="1" value="45" />
+        <div class="field-input-row">
+          <input type="number" id="adNew" value="45" min="0" step="1" inputmode="numeric" />
+          <span class="field-suffix" id="adNewUnit">人 / 月</span>
+        </div>
+        <p class="note-line" id="targetYearNote"></p>
+      </div>
+    </div>
   </section>
 
   <section class="card step-card" aria-label="STEP3 必要な販促費">
@@ -975,7 +975,7 @@
 
   <section class="card assumptions" aria-label="この試算の考え方">
     <h2 class="section-title">この試算の考え方</h2>
-    <p><strong>CPA（顧客獲得単価）</strong>は「販促費 ÷ 獲得できた新規客数」で、新規1人を獲得するのにかかった費用です。STEP2のCPA相場は、<strong>中核・地方都市における業種別の実勢CPAと月間販促費の相場</strong>を一次根拠にした値です。二次チェックとして <strong>CPA ＝ 掲載費 ÷（配布部数 × 反響率 × 成約率）</strong> でも成立する水準かを確認しています。掲載料は<strong>中広グループ価格表（媒体別広告掲載料金表）</strong>から、<strong>発行部数 × 広告サイズ × 年間掲載回数</strong>で引いています（税別）。</p>
+    <p><strong>CPA（顧客獲得単価）</strong>は「販促費 ÷ 獲得できた新規客数」で、新規1人を獲得するのにかかった費用です。STEP1のCPA相場は、<strong>中核・地方都市における業種別の実勢CPAと月間販促費の相場</strong>を一次根拠にした値です。二次チェックとして <strong>CPA ＝ 掲載費 ÷（配布部数 × 反響率 × 成約率）</strong> でも成立する水準かを確認しています。掲載料は<strong>中広グループ価格表（媒体別広告掲載料金表）</strong>から、<strong>発行部数 × 広告サイズ × 年間掲載回数</strong>で引いています（税別）。</p>
     <p>ネット広告（リスティング）の業界別平均CPAは紙媒体より高く出るため、そのままでは使えません。たとえば美容室はホットペッパービューティーの掲載料が地方の最下位プランでも月2.5万円〜、上位プランでは月数十万円かかり、これに予約経由売上の2%手数料とポイント負担が乗ります。<strong>月間の総販促費は10〜20万円が実態</strong>で、新規1人あたりのCPAは3,000〜6,000円。この水準を各ジャンルに当てはめています。あわせて<strong>情報誌の1枠は折込チラシ1枚より反響が出にくい</strong>ため、逆算すると反響率が <strong>0.001〜0.019%</strong> になる水準かも確認しています。これは折込チラシの業種別相場（飲食0.05〜0.5%／美容室0.1〜0.5%／クリニック0.05〜0.3%／学習塾0.1〜1.0%／不動産・リフォーム0.01〜0.2%）をいずれも下回る、控えめな見積もりです。業種ごとに「反響がそのまま来店になるか（飲食・美容・クリニック・車検）」「反響から契約までに絞り込みがあるか（塾・エステ・不動産・注文住宅・リフォーム）」を分けて成約率を掛けています。あわせて、業種ごとの「客単価に対して許容できる販促費の割合」（美容室なら客単価の20〜30%、住宅なら契約金額の3%前後）でも妥当性を確認しています。</p>
     <p>おすすめのサイズ・頻度はジャンルごとに初期値として入れてあります（例：<strong>注文住宅・不動産は本文1P × 年12回</strong>、<strong>リフォーム・医療・車・冠婚葬祭・BtoBは本文1/2P</strong>、<strong>飲食・美容・ショップなどは本文1/4P</strong>）。発行部数・サイズ・頻度を変えると、価格表の単価が自動で入れ替わります。選べるサイズは本文2P／1P／1/2P／1/4P／1/6枠／1/8枠と、表4・表2・表3・表2・3対向の計9種類です。フリー広告の制作費（1P 30,000円／1/2P 20,000円／1/4P 15,000円／1/4P未満 10,000円・初回のみ、原稿をデータ支給いただける場合は不要）はシミュレーションには含めていません。</p>
     <p>STEP3の<strong>「必要な販促費」は、チラシ・Web・SNS・ポータルサイトなど情報誌以外も含めた、すべての販促手段を合わせた全販促費</strong>の目安です。STEP5の費用対効果シミュレーションは、そのうち<strong>情報誌に出稿した場合</strong>の売上・損益を計算しています。両者は範囲が違うため、STEP3では「必要販促費のうち情報誌が占める割合」を並べて表示しています。</p>
@@ -1354,7 +1354,7 @@
     return Math.round(raw / 500) * 500;
   }
 
-  /* ---------- STEP2: ジャンル別CPA ---------- */
+  /* ---------- STEP1: ジャンル別CPA ---------- */
 
   function applyCpaRange(g) {
     var max = Math.ceil((g.high * 1.4) / 1000) * 1000;
@@ -1795,7 +1795,7 @@
     });
   }
 
-  /* ---------- STEP1 / STEP2 / STEP3 の描画 ---------- */
+  /* ---------- STEP1〜3（ジャンル別CPA／獲得したい新規獲得数／必要な販促費）の描画 ---------- */
 
   function renderTargetNote(target) {
     if (target <= 0) {
