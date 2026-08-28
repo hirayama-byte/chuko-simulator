@@ -626,6 +626,9 @@
     letter-spacing: 0;
   }
 
+  .budget-hero-value.is-good { color: var(--accent-profit-pos); }
+  .budget-hero-value.is-bad { color: var(--accent-profit-neg); }
+
   .budget-formula {
     font-size: 0.92rem;
     color: var(--ink-muted);
@@ -973,12 +976,48 @@
     </details>
   </section>
 
+  <section class="card step-card" aria-label="STEP6 他の媒体に使える残りの販促費">
+    <div class="step-head">
+      <span class="step-num">6</span>
+      <h2 class="step-title">他の媒体に使える残りの販促費</h2>
+    </div>
+    <p class="step-lead">必要な販促費から情報誌に使う費用を引いた残りです。チラシ・Web・SNS などに回せる金額の目安になります。</p>
+
+    <div class="budget-hero">
+      <span class="budget-hero-label">他の媒体に使える残り（年間）</span>
+      <span class="budget-hero-value" id="valRestYear">—</span>
+      <span class="budget-formula" id="valRestFormula"></span>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-tile is-primary">
+        <span class="stat-label">残り（月あたり）</span>
+        <span class="stat-value" id="valRestMonth">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">必要販促費（年間）</span>
+        <span class="stat-value" id="valRestNeed">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">情報誌の掲載料（年間）</span>
+        <span class="stat-value" id="valRestMedia">—</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">情報誌の占有率</span>
+        <span class="stat-value" id="valRestShare">—</span>
+      </div>
+    </div>
+
+    <p class="note-line" id="restNote"></p>
+    <div class="compare-box" id="restAllocation"></div>
+  </section>
+
   <section class="card assumptions" aria-label="この試算の考え方">
     <h2 class="section-title">この試算の考え方</h2>
     <p><strong>CPA（顧客獲得単価）</strong>は「販促費 ÷ 獲得できた新規客数」で、新規1人を獲得するのにかかった費用です。STEP1のCPA相場は、<strong>中核・地方都市における業種別の実勢CPAと月間販促費の相場</strong>を一次根拠にした値です。二次チェックとして <strong>CPA ＝ 掲載費 ÷（配布部数 × 反響率 × 成約率）</strong> でも成立する水準かを確認しています。掲載料は<strong>中広グループ価格表（媒体別広告掲載料金表）</strong>から、<strong>発行部数 × 広告サイズ × 年間掲載回数</strong>で引いています（税別）。</p>
     <p>ネット広告（リスティング）の業界別平均CPAは紙媒体より高く出るため、そのままでは使えません。たとえば美容室はホットペッパービューティーの掲載料が地方の最下位プランでも月2.5万円〜、上位プランでは月数十万円かかり、これに予約経由売上の2%手数料とポイント負担が乗ります。<strong>月間の総販促費は10〜20万円が実態</strong>で、新規1人あたりのCPAは3,000〜6,000円。この水準を各ジャンルに当てはめています。あわせて<strong>情報誌の1枠は折込チラシ1枚より反響が出にくい</strong>ため、逆算すると反響率が <strong>0.001〜0.019%</strong> になる水準かも確認しています。これは折込チラシの業種別相場（飲食0.05〜0.5%／美容室0.1〜0.5%／クリニック0.05〜0.3%／学習塾0.1〜1.0%／不動産・リフォーム0.01〜0.2%）をいずれも下回る、控えめな見積もりです。業種ごとに「反響がそのまま来店になるか（飲食・美容・クリニック・車検）」「反響から契約までに絞り込みがあるか（塾・エステ・不動産・注文住宅・リフォーム）」を分けて成約率を掛けています。あわせて、業種ごとの「客単価に対して許容できる販促費の割合」（美容室なら客単価の20〜30%、住宅なら契約金額の3%前後）でも妥当性を確認しています。</p>
     <p>おすすめのサイズ・頻度はジャンルごとに初期値として入れてあります（例：<strong>注文住宅・不動産は本文1P × 年12回</strong>、<strong>リフォーム・医療・車・冠婚葬祭・BtoBは本文1/2P</strong>、<strong>飲食・美容・ショップなどは本文1/4P</strong>）。発行部数・サイズ・頻度を変えると、価格表の単価が自動で入れ替わります。選べるサイズは本文2P／1P／1/2P／1/4P／1/6枠／1/8枠と、表4・表2・表3・表2・3対向の計9種類です。フリー広告の制作費（1P 30,000円／1/2P 20,000円／1/4P 15,000円／1/4P未満 10,000円・初回のみ、原稿をデータ支給いただける場合は不要）はシミュレーションには含めていません。</p>
-    <p>STEP3の<strong>「必要な販促費」は、チラシ・Web・SNS・ポータルサイトなど情報誌以外も含めた、すべての販促手段を合わせた全販促費</strong>の目安です。STEP5の費用対効果シミュレーションは、そのうち<strong>情報誌に出稿した場合</strong>の売上・損益を計算しています。両者は範囲が違うため、STEP3では「必要販促費のうち情報誌が占める割合」を並べて表示しています。</p>
+    <p>STEP3の<strong>「必要な販促費」は、チラシ・Web・SNS・ポータルサイトなど情報誌以外も含めた、すべての販促手段を合わせた全販促費</strong>の目安です。STEP5の費用対効果シミュレーションは、そのうち<strong>情報誌に出稿した場合</strong>の売上・損益を計算しています。両者は範囲が違うため、STEP3では「必要販促費のうち情報誌が占める割合」を、STEP6では「必要販促費から情報誌の掲載料を引いた残り」を表示しています。</p>
     <p>広告経由の来店者数は、<strong>「広告を掲載した月に加わる新規集客数」＋「来店頻度のタイミングで発生するリピート来店数（新規集客数×リピート率）」</strong>として計算しています。リピート来店は広告を実施した回数を基準に発生し、2回目以降の掲載タイミングのうち「来店頻度」で選んだ間隔ごとにだけ計上されます（広告を打っていない月には発生しません）。</p>
     <p>売上・損益は、あくまで<strong>広告によって上乗せされた分</strong>のみを計算しています。</p>
     <p>CPAも反響も、季節・競合・原稿内容・立地など様々な要因で変動します。この試算は打ち合わせ時の目安としてご活用ください。</p>
@@ -1020,6 +1059,14 @@
     valBudgetRatio: document.getElementById("valBudgetRatio"),
     budgetNote: document.getElementById("budgetNote"),
     compareBox: document.getElementById("compareBox"),
+    valRestYear: document.getElementById("valRestYear"),
+    valRestFormula: document.getElementById("valRestFormula"),
+    valRestMonth: document.getElementById("valRestMonth"),
+    valRestNeed: document.getElementById("valRestNeed"),
+    valRestMedia: document.getElementById("valRestMedia"),
+    valRestShare: document.getElementById("valRestShare"),
+    restNote: document.getElementById("restNote"),
+    restAllocation: document.getElementById("restAllocation"),
     unitPrice: document.getElementById("unitPrice"),
     unitPriceRange: document.getElementById("unitPriceRange"),
     repeatRate: document.getElementById("repeatRate"),
@@ -1829,7 +1876,7 @@
 
     els.valBudgetMonth.innerHTML = yen(budgetMonth) + "<span class=\"unit\">/月</span>";
     els.valBudgetFormula.textContent =
-      target.toLocaleString("ja-JP") + "人 / 月 × CPA " + yen(cpa) + " = " + yen(budgetMonth) + " / 月";
+      target.toLocaleString("ja-JP") + unitOf() + " / 月 × CPA " + yen(cpa) + " = " + yen(budgetMonth) + " / 月";
 
     els.valBudgetYear.innerHTML = budgetYear > 0 ? man(budgetYear) : "—";
     els.valBudgetPeople.innerHTML = peopleYear.toLocaleString("ja-JP") + "<span class=\"unit\">" + unitOf() + "</span>";
@@ -1861,7 +1908,7 @@
 
     if (budgetYear <= 0 || target <= 0) {
       els.compareBox.innerHTML = "獲得したい人数と CPA を入力すると、必要販促費のうち情報誌が占める割合を表示します。";
-      return;
+      return { budgetYear: budgetYear, ourYear: ourYear, placements: placements, freqLabel: freqLabel };
     }
 
     var html = "";
@@ -1886,6 +1933,85 @@
     }
 
     els.compareBox.innerHTML = html;
+
+    return { budgetYear: budgetYear, ourYear: ourYear, placements: placements, freqLabel: freqLabel };
+  }
+
+  /* ---------- STEP6: 他の媒体に使える残りの販促費 ---------- */
+
+  /* 残りの予算で、いまより大きいサイズに上げても必要販促費に収まるかを調べる。 */
+  function fitBiggerSize(budgetYear, placements) {
+    var area = els.adArea.value;
+    var freqKey = els.adFreq.value;
+    var curTable = PRICE[els.adSize.value] && PRICE[els.adSize.value][area];
+    if (!curTable || curTable[freqKey] === undefined) return null;
+    var curYear = curTable[freqKey] * placements;
+    var best = null;
+    SIZES.forEach(function (sz) {
+      var t = PRICE[sz.key] && PRICE[sz.key][area];
+      if (!t || t[freqKey] === undefined) return;
+      var y = t[freqKey] * placements;
+      if (y <= budgetYear && y > curYear && (!best || y > best.year)) {
+        best = { label: sz.label, year: y };
+      }
+    });
+    return best;
+  }
+
+  function renderRest(b, cpa) {
+    if (!b) return;
+    var need = b.budgetYear;
+    var media = b.ourYear;
+    var rest = need - media;
+    var restMonth = rest / 12;
+
+    var blank = (need <= 0);
+
+    var yearEl = els.valRestYear;
+    yearEl.innerHTML = blank
+      ? "—"
+      : (rest >= 0 ? "" : "△") + yen(Math.abs(rest)) + "<span class=\"unit\">/年</span>";
+    yearEl.classList.toggle("is-good", !blank && rest > 0);
+    yearEl.classList.toggle("is-bad", !blank && rest < 0);
+
+    els.valRestFormula.textContent = blank
+      ? "必要販促費 − 情報誌の掲載料 = 他の媒体に使える残り"
+      : "必要販促費 " + yen(need) + " − 情報誌 " + yen(media) + " = " + (rest >= 0 ? "" : "△") + yen(Math.abs(rest)) + "（年間）";
+
+    var monthEl = els.valRestMonth;
+    monthEl.innerHTML = blank ? "—" : (rest >= 0 ? "" : "△") + yen(Math.abs(restMonth));
+    monthEl.classList.toggle("is-good", !blank && rest > 0);
+    monthEl.classList.toggle("is-bad", !blank && rest < 0);
+
+    els.valRestNeed.innerHTML = need > 0 ? man(need) : "—";
+    els.valRestMedia.innerHTML = media > 0 ? man(media) : "—";
+    els.valRestShare.innerHTML = need > 0
+      ? (media / need * 100).toFixed(0) + "<span class=\"unit\">%</span>"
+      : "—";
+
+    els.restNote.innerHTML =
+      "情報誌の金額は<strong>掲載料のみ（税別）</strong>で、制作費は含めていません。残りは折込チラシ・ポスティング、Web広告（リスティング・SNS）、ポータルサイトの掲載料、看板などに配分する想定です。";
+
+    if (need <= 0) {
+      els.restAllocation.innerHTML = "STEP1〜2でジャンルと目標を入力すると、残りの販促費を表示します。";
+      return;
+    }
+
+    var html;
+    if (rest > 0) {
+      html = "他の媒体に回せるのは <strong>年間 " + yen(rest) + "</strong>（月あたり <strong>" + yen(restMonth) + "</strong>）です。";
+      var up = fitBiggerSize(need, b.placements);
+      if (up) {
+        html += "<br>この残りを使えば、情報誌の枠を <strong>" + up.label + "</strong>（" + b.freqLabel + " で年間 " + yen(up.year) + "）に変更しても必要販促費の範囲に収まります。";
+      }
+    } else if (rest === 0) {
+      html = "必要販促費と情報誌の掲載料がちょうど同額です。他の媒体に回せる分はありません。";
+    } else {
+      var fit = cpa > 0 ? Math.round(media / 12 / cpa) : 0;
+      html = "情報誌の掲載料が必要販促費を <strong>年間 " + yen(-rest) + "</strong> 上回っているため、他の媒体に回せる分はありません。" +
+        "サイズか掲載頻度を下げるか、目標を <strong>月 " + fit.toLocaleString("ja-JP") + unitOf() + "</strong> まで引き上げると釣り合います。";
+    }
+    els.restAllocation.innerHTML = html;
   }
 
   /* ---------- 全体の再計算 ---------- */
@@ -1905,7 +2031,8 @@
     renderTargetNote(adNew);
     renderTierState(cpa);
     renderCpaNote(cpa);
-    renderBudget(adNew, cpa, unitPrice, adCost, freq);
+    var budgetInfo = renderBudget(adNew, cpa, unitPrice, adCost, freq);
+    renderRest(budgetInfo, cpa);
 
     var rowsExtended = simulate(unitPrice, repeatRate, revisitInterval, adNew, adCost, freq, EXTENDED_MONTHS);
     var rows12 = rowsExtended.slice(0, MONTHS);
